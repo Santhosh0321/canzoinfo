@@ -180,6 +180,8 @@
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+}
 }
 
 @media (prefers-reduced-motion: reduce) {
