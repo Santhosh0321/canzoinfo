@@ -10,6 +10,7 @@ import InternshipPage from "./pages/InternshipPage";
 import InternshipApplyPage from "./pages/InternshipApplyPage";
 import WorkDetailPage from "./pages/WorkDetailPage";
 import NotFound from "./pages/NotFound";
+import Navbar from "./components/Navbar";
 
 const queryClient = new QueryClient();
 
@@ -19,16 +20,21 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/student" element={<StudentPage />} />
-          <Route path="/colleges-canteens" element={<CollegesCanteensPage />} />
-          <Route path="/internship" element={<InternshipPage />} />
-          <Route path="/internship/apply" element={<InternshipApplyPage />} />
-          <Route path="/our-work/:slug" element={<WorkDetailPage />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <div className="min-h-screen flex flex-col">
+          <Navbar />
+          <main className="flex-1">
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/student" element={<StudentPage />} />
+              <Route path="/colleges-canteens" element={<CollegesCanteensPage />} />
+              <Route path="/internship" element={<InternshipPage />} />
+              <Route path="/internship/apply" element={<InternshipApplyPage />} />
+              <Route path="/our-work/:slug" element={<WorkDetailPage />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+        </div>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
