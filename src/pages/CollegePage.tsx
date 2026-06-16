@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowLeft, School, Building2, Shield, TrendingUp, LayoutDashboard, Users } from "lucide-react";
 import { Link } from "react-router-dom";
-import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 const stats = [
@@ -29,7 +28,6 @@ const fadeUp = {
 
 const CollegePage = () => (
   <div className="min-h-screen">
-    <Navbar />
     <section className="pt-28 pb-20 relative overflow-hidden">
       <div className="absolute top-10 -right-20 w-[500px] h-[500px] rounded-full bg-accent/15 blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 -left-32 w-[300px] h-[300px] rounded-full bg-accent/10 blur-[80px] pointer-events-none" />
