@@ -94,6 +94,12 @@
   html, body {
     overflow-x: clip;
   }
+  :root {
+    --navbar-height: 4rem;
+  }
+  body {
+    padding-top: var(--navbar-height);
+  }
   * {
     @apply border-border;
   }
@@ -180,7 +186,7 @@
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
+  scroll-padding-top: calc(var(--navbar-height, 4rem) + 1rem);
 }
 
 @media (prefers-reduced-motion: reduce) {
