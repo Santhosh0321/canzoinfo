@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import canzoLogo from "@/assets/canzo-logo.png";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 
@@ -44,10 +44,7 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const navRef = (typeof window !== "undefined") ? undefined : undefined;
-  const navElRef = (function useNavRef() {
-    return require("react").useRef<HTMLElement | null>(null);
-  })();
+  const navElRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const el = navElRef.current;
