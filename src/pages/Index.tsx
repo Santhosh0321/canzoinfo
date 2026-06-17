@@ -24,8 +24,10 @@ const Index = () => {
       <div className="stack-card" style={{ zIndex: 6 }}><Reveal><ScreenshotsSection /></Reveal></div>
       <div className="stack-card" style={{ zIndex: 7 }}><Reveal><OurWorkSection /></Reveal></div>
       <div className="stack-card" style={{ zIndex: 8 }}><Reveal><DownloadAppSection /></Reveal></div>
-      <div className="stack-card" style={{ zIndex: 9 }}><Reveal><CTASection /></Reveal></div>
-      <Footer />
+      <div className="stack-card stack-card-combined" style={{ zIndex: 9 }}>
+        <CTASection />
+        <Footer />
+      </div>
       <StickyCTA />
     </div>
   );
