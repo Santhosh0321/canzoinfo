@@ -170,23 +170,20 @@
 }
 
 @layer components {
-  /* Zomato-style stacking card sections */
+  /* Zomato-style stacking card sections — MOBILE ONLY */
   .stack-card {
     position: relative;
-    background: hsl(var(--background));
-    border-top-left-radius: 32px;
-    border-top-right-radius: 32px;
-    margin-top: -28px;
-    box-shadow: 0 -16px 40px -24px hsl(203 25% 18% / 0.18);
-    overflow: hidden;
   }
-  .stack-card + .stack-card { margin-top: -28px; }
-  @media (min-width: 1024px) {
+  @media (max-width: 767px) {
     .stack-card {
-      border-top-left-radius: 40px;
-      border-top-right-radius: 40px;
-      margin-top: -40px;
+      background: hsl(var(--background));
+      border-top-left-radius: 32px;
+      border-top-right-radius: 32px;
+      margin-top: -60px;
+      box-shadow: 0 -16px 40px -18px hsl(203 25% 18% / 0.22);
+      overflow: hidden;
     }
+    .stack-card + .stack-card { margin-top: -60px; }
   }
 
   /* Floating bottom CTA pill */
