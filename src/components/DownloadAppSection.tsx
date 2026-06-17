@@ -89,7 +89,7 @@ const DownloadAppSection = () => {
   return (
     <section
       id="download-app"
-      className="flex items-center py-section bg-yellow-500/10 md:bg-yellow-500/10 bg-white"
+      className="flex items-center py-section bg-[#ffe1e6] md:bg-yellow-500/10"
     >
       <div className="container px-0 md:px-4">
         <motion.div
@@ -100,9 +100,9 @@ const DownloadAppSection = () => {
           className="relative overflow-hidden md:rounded-3xl md:bg-card md:border border-border md:px-[clamp(1.25rem,4vw,4rem)] md:py-[clamp(2.5rem,5vw,4rem)] w-full"
         >
           {/* Mobile: completely custom layout matching the reference image */}
-          <div className="md:hidden flex flex-col w-full bg-white">
+          <div className="md:hidden flex flex-col w-full bg-[#ffe1e6]">
             {/* Top Pink Gradient with overlapping phones */}
-            <div className="w-full bg-gradient-to-b from-[#ffe1e6] to-white pt-12 pb-4 flex justify-center items-end h-[380px]">
+            <div className="w-full pt-12 pb-4 flex justify-center items-end h-[380px]">
               <div className="relative w-[280px] h-full">
                 {/* Back Phone (Left, smaller) */}
                 <div className="absolute left-2 bottom-[10px]">
@@ -116,7 +116,7 @@ const DownloadAppSection = () => {
             </div>
 
             {/* Bottom Content Container */}
-            <div className="pt-12 pb-16 px-4 bg-white text-center flex flex-col items-center relative z-20">
+            <div className="pt-12 pb-16 px-4 text-center flex flex-col items-center relative z-20">
               <h2 className="text-4xl font-display font-bold text-black tracking-tight mb-4">
                 Download the app now!
               </h2>

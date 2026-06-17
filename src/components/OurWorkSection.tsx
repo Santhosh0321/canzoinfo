@@ -46,7 +46,7 @@ const OurWorkSection = () => {
   }, [isPaused]);
 
   return (
-    <section id="our-work" className="py-section">
+    <section id="our-work" className="py-section bg-[#f4f2eb]">
       <div className="container">
         <div className="flex items-end justify-between mb-[clamp(1.5rem,3vw,2.5rem)]">
           <div>
