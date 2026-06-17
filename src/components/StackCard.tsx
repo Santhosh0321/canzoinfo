@@ -22,15 +22,20 @@ const StackCard: React.FC<StackCardProps> = ({ children, zIndex, className = "" 
         return;
       }
 
-      const height = card.offsetHeight;
-      const windowHeight = window.innerHeight;
+      // Only apply dynamic sticky behavior on mobile
+      if (window.innerWidth <= 767) {
+        const height = card.offsetHeight;
+        const windowHeight = window.innerHeight;
 
-      // If the card is taller than the screen, stick when its bottom reaches the screen's bottom.
-      // If it's shorter, stick immediately at the top.
-      if (height > windowHeight) {
-        card.style.top = `${windowHeight - height}px`;
+        // If the card is taller than the screen, stick when its bottom reaches the screen's bottom.
+        // If it's shorter, stick immediately at the top.
+        if (height > windowHeight) {
+          card.style.top = `${windowHeight - height}px`;
+        } else {
+          card.style.top = "0px";
+        }
       } else {
-        card.style.top = "0px";
+        card.style.top = "";
       }
     });
 
@@ -39,20 +44,13 @@ const StackCard: React.FC<StackCardProps> = ({ children, zIndex, className = "" 
     return () => observer.disconnect();
   }, []);
 
-  const isCombined = className.includes("stack-card-combined");
-
   return (
     <div
-      className={isCombined ? "" : "stack-card-wrapper"}
+      ref={cardRef}
+      className={`stack-card ${className}`}
       style={{ zIndex }}
     >
-      <div
-        ref={cardRef}
-        className={`stack-card ${className}`}
-        style={{ zIndex }}
-      >
-        {children}
-      </div>
+      {children}
     </div>
   );
 };
