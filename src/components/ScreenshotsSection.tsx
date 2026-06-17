@@ -5,15 +5,15 @@ import { EffectCoverflow, Autoplay } from "swiper/modules";
 import type { Swiper as SwiperClass } from "swiper";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
-import web4 from "@/assets/canzo-web4.jpeg.asset.json";
-import web5 from "@/assets/canzo-web5.jpeg.asset.json";
-import web6 from "@/assets/canzo-web6.jpeg.asset.json";
+import web4 from "@/assets/work/web4.jpeg";
+import web5 from "@/assets/work/web5.jpeg";
+import web6 from "@/assets/work/web6.jpeg";
 
 // Initial state must render as: Left = Canteens, Center = Sign In, Right = Cart.
 const screenshots = [
-  { src: web4.url, label: "Browse Canteens" },
-  { src: web6.url, label: "Welcome & Sign In" },
-  { src: web5.url, label: "Food Cart & Order" },
+  { src: web4, label: "Browse Canteens" },
+  { src: web6, label: "Welcome & Sign In" },
+  { src: web5, label: "Food Cart & Order" },
 ];
 
 const loopedScreenshots = Array.from({ length: 7 }, (_, cycle) =>

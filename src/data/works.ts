@@ -1,30 +1,30 @@
-import alleasa from "@/assets/work/alleasa.jpeg.asset.json";
-import certificate from "@/assets/work/certificate.png.asset.json";
-import certiv from "@/assets/work/certiv.png.asset.json";
-import hindulive from "@/assets/work/hindulive.png.asset.json";
-import kg1 from "@/assets/work/kg1.jpg.asset.json";
-import kg2 from "@/assets/work/kg2.jpg.asset.json";
-import kg3 from "@/assets/work/kg3.jpg.asset.json";
-import letter from "@/assets/work/letter.jpeg.asset.json";
-import letterwp from "@/assets/work/letterwp.jpeg.asset.json";
-import std1 from "@/assets/work/std1.jpeg.asset.json";
-import std2 from "@/assets/work/std2.jpeg.asset.json";
-import threeinkg from "@/assets/work/threeinkg.jpeg.asset.json";
+import alleasa from "@/assets/work/alleasa.jpeg";
+import certificate from "@/assets/work/certificate.png";
+import certiv from "@/assets/work/certiv.png";
+import hindulive from "@/assets/work/hindulive.png";
+import kg1 from "@/assets/work/kg1.JPG";
+import kg2 from "@/assets/work/kg2.JPG";
+import kg3 from "@/assets/work/kg3.JPG";
+import letter from "@/assets/work/letter.jpeg";
+import letterwp from "@/assets/work/letterwp.jpeg";
+import std1 from "@/assets/work/std1.jpeg";
+import std2 from "@/assets/work/std2.jpeg";
+import threeinkg from "@/assets/work/threeinkg.jpeg";
 
 export const IMG = {
-  alleasa: alleasa.url,
-  certificate: certificate.url,
-  certiv: certiv.url,
-  hindulive: hindulive.url,
-  kg1: kg1.url,
-  kg2: kg2.url,
-  kg3: kg3.url,
-  letter: letter.url,
-  letterwp: letterwp.url,
-  std1: std1.url,
-  std2: std2.url,
-  threeinkg: threeinkg.url,
-  allinkg: kg1.url,
+  alleasa,
+  certificate,
+  certiv,
+  hindulive,
+  kg1,
+  kg2,
+  kg3,
+  letter,
+  letterwp,
+  std1,
+  std2,
+  threeinkg,
+  allinkg: kg1,
 };
 
 export type WorkSection =
