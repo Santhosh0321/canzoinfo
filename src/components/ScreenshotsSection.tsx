@@ -146,6 +146,16 @@ const ScreenshotsSection = () => {
           transition: transform 1100ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 1100ms cubic-bezier(0.22, 1, 0.36, 1);
           will-change: transform;
         }
+        @media (min-width: 1024px) {
+          .coverflow-slide {
+            width: clamp(200px, 18vw, 260px);
+          }
+        }
+        @media (min-width: 768px) and (max-width: 1023px) {
+          .coverflow-slide {
+            width: clamp(200px, 24vw, 280px);
+          }
+        }
         .canzo-coverflow .swiper-wrapper {
           align-items: center;
           transform-style: preserve-3d;
