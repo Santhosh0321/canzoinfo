@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import canzoLogo from "@/assets/logohero.png";
-import heroBg from "@/assets/hero-bg.jpg";
+import heroVideo from "@/assets/herovideo.mp4";
 import cardStudents from "@/assets/card-students.jpg";
 import cardCanteen from "@/assets/card-canteen.jpg";
 import cardInternship from "@/assets/card-internship.jpg";
@@ -79,10 +79,13 @@ const HeroSection = () => {
         <section ref={ref} className="relative w-full h-[100dvh] overflow-hidden bg-black flex items-center justify-center">
           {/* Parallax Background */}
           <motion.div style={{ y, opacity }} className="absolute inset-0 z-0">
-            <img 
-              src={heroBg} 
-              alt="Campus food" 
-              className="w-full h-full object-cover"
+            <video 
+              src={heroVideo} 
+              autoPlay 
+              loop 
+              muted 
+              playsInline
+              className="w-full h-full object-cover opacity-70"
             />
           </motion.div>
 
