@@ -21,7 +21,7 @@ const PlayStoreBadge = () => (
       <path fill="#4285F4" d="M3.6 3.5C3.5 3.7 3.4 4 3.4 4.3v15.4c0 .3.1.6.2.8l9.6-9.5L3.6 3.5z" />
       <path fill="#EA4335" d="M5.1 3.1c-.6-.3-1.2-.1-1.5.4l8.8 8.8 2.7-2.7-10-6.5z" />
     </svg>
-    <div className="flex flex-col leading-tight text-left">
+    <div className="flex flex-col leading-tight text-left ">
       <span className="text-[10px] uppercase tracking-wide opacity-80">Get it on</span>
       <span className="text-base font-semibold">Google Play</span>
     </div>
@@ -51,7 +51,7 @@ const PhoneMockup = ({
     <span aria-hidden className="absolute -right-[3px] top-[140px] h-16 w-[3px] rounded-r bg-neutral-800" />
 
     {/* Inner bezel */}
-    <div className="relative w-full h-full rounded-[2.1rem] bg-white overflow-hidden">
+    <div className="relative w-full h-full rounded-[2.1rem] bg-white overflow-hidden ">
       {/* Dynamic Island */}
       <div
         aria-hidden
@@ -93,7 +93,7 @@ const DownloadAppSection = () => {
   return (
     <section
       id="download-app"
-      className="flex items-center py-section bg-background"
+      className="flex items-center py-section bg-yellow-500/10"
     >
       <div className="container">
         <motion.div
@@ -106,7 +106,7 @@ const DownloadAppSection = () => {
           {/* Mobile: phone with app screen on top, text below */}
           <div className="md:hidden">
             <div className="relative w-full flex justify-center py-6">
-              <PhoneMockup variant="screen" className="rotate-[-3deg]" />
+              <PhoneMockup variant="qr" className="rotate-[-3deg]" />
             </div>
             <div className="pt-8 text-left">
               <h2 className="text-fluid-h1 leading-[1.1] font-display font-bold text-foreground tracking-tight">

@@ -177,7 +177,6 @@
   @media (max-width: 767px) {
     .stack-card {
       position: sticky;
-      top: 0;
       background: hsl(var(--background));
       border-top-left-radius: 28px;
       border-top-right-radius: 28px;

@@ -1,4 +1,4 @@
-import BrandStrip from "@/components/BrandStrip";
+
 import HeroSection from "@/components/HeroSection";
 import ProblemSolution from "@/components/ProblemSolution";
 import FeaturesSection from "@/components/FeaturesSection";
@@ -11,23 +11,23 @@ import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import StickyCTA from "@/components/StickyCTA";
+import StackCard from "@/components/StackCard";
 
 const Index = () => {
   return (
     <div className="min-h-screen pb-24 md:pb-0">
-      <BrandStrip />
       <HeroSection />
-      <div className="stack-card" style={{ zIndex: 2 }}><Reveal><ProblemSolution /></Reveal></div>
-      <div className="stack-card" style={{ zIndex: 3 }}><Reveal><FeaturesSection /></Reveal></div>
-      <div className="stack-card" style={{ zIndex: 4 }}><Reveal><HowItWorks /></Reveal></div>
-      <div className="stack-card" style={{ zIndex: 5 }}><Reveal><EcosystemSection /></Reveal></div>
-      <div className="stack-card" style={{ zIndex: 6 }}><Reveal><ScreenshotsSection /></Reveal></div>
-      <div className="stack-card" style={{ zIndex: 7 }}><Reveal><OurWorkSection /></Reveal></div>
-      <div className="stack-card" style={{ zIndex: 8 }}><Reveal><DownloadAppSection /></Reveal></div>
-      <div className="stack-card stack-card-combined" style={{ zIndex: 9 }}>
+      <StackCard zIndex={2}><Reveal><ProblemSolution /></Reveal></StackCard>
+      <StackCard zIndex={3}><Reveal><FeaturesSection /></Reveal></StackCard>
+      <StackCard zIndex={4}><Reveal><HowItWorks /></Reveal></StackCard>
+      <StackCard zIndex={5}><Reveal><EcosystemSection /></Reveal></StackCard>
+      <StackCard zIndex={6}><Reveal><ScreenshotsSection /></Reveal></StackCard>
+      <StackCard zIndex={7}><Reveal><OurWorkSection /></Reveal></StackCard>
+      <StackCard zIndex={8}><Reveal><DownloadAppSection /></Reveal></StackCard>
+      <StackCard zIndex={9} className="stack-card-combined">
         <CTASection />
         <Footer />
-      </div>
+      </StackCard>
       <StickyCTA />
     </div>
   );

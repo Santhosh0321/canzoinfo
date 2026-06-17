@@ -1,26 +1,21 @@
-import { motion } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import canzoLogo from "@/assets/logohero.png";
+import heroBg from "@/assets/hero-bg.jpg";
 import cardStudents from "@/assets/card-students.jpg";
 import cardCanteen from "@/assets/card-canteen.jpg";
 import cardInternship from "@/assets/card-internship.jpg";
 
-const headlineAnim = {
-  initial: { opacity: 0, y: 40 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" as const } },
-};
-
-const subtitleAnim = {
-  initial: { opacity: 0, y: 40 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.8, delay: 0.2, ease: "easeOut" as const } },
-};
+import StackCard from "./StackCard";
 
 const ctaAnim = {
   initial: { opacity: 0, scale: 0.9 },
   animate: {
     opacity: 1,
     scale: 1,
-    transition: { delay: 0.6, type: "spring" as const, stiffness: 220, damping: 18 },
+    transition: { delay: 0.2, type: "spring" as const, stiffness: 220, damping: 18 },
   },
 };
 
@@ -50,86 +45,250 @@ const categories = [
 
 const HeroSection = () => {
   const navigate = useNavigate();
+  const ref = useRef(null);
+  
+  const [time, setTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const hours = time.getHours();
+  const minutes = time.getMinutes();
+  const seconds = time.getSeconds();
+
+  const hourDegrees = ((hours % 12) + minutes / 60) * 30;
+  const minuteDegrees = (minutes + seconds / 60) * 6;
+  const secondDegrees = seconds * 6;
+  
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"]
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0.2]);
 
   return (
-    <section className="relative min-h-[88svh] flex flex-col pt-16 overflow-hidden">
-      <div className="relative bg-accent py-section">
-        <div className="absolute top-0 right-0 w-[min(40vw,400px)] aspect-square rounded-full bg-foreground/5 blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-[min(30vw,300px)] aspect-square rounded-full bg-foreground/5 blur-[100px] pointer-events-none" />
+    <>
+      {/* Premium 100dvh Hero */}
+      <StackCard zIndex={0}>
+        <section ref={ref} className="relative w-full h-[100dvh] overflow-hidden bg-black flex items-center justify-center">
+          {/* Parallax Background */}
+          <motion.div style={{ y, opacity }} className="absolute inset-0 z-0">
+            <img 
+              src={heroBg} 
+              alt="Campus food" 
+              className="w-full h-full object-cover"
+            />
+          </motion.div>
 
-        <div className="container relative z-10">
-          <div className="text-center max-w-3xl mx-auto">
-            <motion.h1
-              initial={headlineAnim.initial}
-              animate={headlineAnim.animate}
-              className="text-display font-display font-bold leading-tight tracking-tight text-accent-foreground"
+          {/* Hero Content */}
+          <div className="relative z-10 container flex flex-col items-center text-center px-4">
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="relative h-24 md:h-32 mb-6 aspect-[1778/634]"
             >
-              What is Canzo?
+              <img 
+                src={canzoLogo} 
+                alt="Canzo Logo" 
+                className="w-full h-full object-contain" 
+              />
+              
+              {/* Real-time Clock overlay — positioned over the inner gray clock face inside the 'O' */}
+              <div 
+                className="absolute"
+                style={{
+                  /* Center precisely on the inner gray clock face */
+                  left: "87.50%",
+                  top: "53.16%",
+                  /* Match the inner gray circle size exactly */
+                  width: "15.43%",
+                  height: "42.72%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              >
+                {/* Hour Hand */}
+                <div 
+                  className="absolute left-1/2 bottom-1/2 origin-bottom rounded-full"
+                  style={{
+                    width: "10%",
+                    height: "32%",
+                    backgroundColor: "#263138",
+                    transform: `translateX(-50%) rotate(${hourDegrees}deg)`,
+                  }}
+                />
+                
+                {/* Minute Hand */}
+                <div 
+                  className="absolute left-1/2 bottom-1/2 origin-bottom rounded-full"
+                  style={{
+                    width: "7%",
+                    height: "42%",
+                    backgroundColor: "#263138",
+                    transform: `translateX(-50%) rotate(${minuteDegrees}deg)`,
+                  }}
+                />
+
+                {/* Second Hand (Orange) */}
+                <div 
+                  className="absolute left-1/2 bottom-1/2 origin-bottom rounded-full"
+                  style={{
+                    width: "4%",
+                    height: "46%",
+                    backgroundColor: "#F99F1B",
+                    transform: `translateX(-50%) rotate(${secondDegrees}deg)`,
+                  }}
+                />
+                
+                {/* Center Pin */}
+                <div 
+                  className="absolute left-1/2 top-1/2 rounded-full -translate-x-1/2 -translate-y-1/2"
+                  style={{
+                    width: "15%",
+                    height: "15%",
+                    backgroundColor: "#263138",
+                  }}
+                />
+              </div>
+            </motion.div>
+            <motion.h1 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
+              className="text-display font-display font-bold text-white tracking-tight mb-6 drop-shadow-lg leading-tight"
+              style={{ textShadow: "0 4px 12px rgba(0,0,0,0.6)" }}
+            >
+              Because Time Matters
             </motion.h1>
-            <motion.p
-              initial={subtitleAnim.initial}
-              animate={subtitleAnim.animate}
-              className="mt-5 text-fluid-body text-accent-foreground/80 max-w-2xl mx-auto"
+            <motion.p 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+              className="text-fluid-h3 font-medium text-white max-w-2xl mb-10 drop-shadow"
+              style={{ textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}
             >
-              Canzo is a smart campus food platform that connects students,
-              canteen partners & colleges — making ordering, managing, and
-              dining effortless.
+              The premium campus food platform connecting students and canteens. 
+              Skip the queue, order seamlessly, and dine effortlessly.
             </motion.p>
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+              className="flex flex-wrap gap-4 justify-center"
+            >
+              <button onClick={() => { window.scrollTo(0,0); navigate('/student'); }} className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-accent text-accent-foreground font-semibold hover:bg-amber-hover transition-colors shadow-lg">
+                Order Now <ArrowRight className="w-5 h-5" />
+              </button>
+              <button onClick={() => { window.scrollTo(0,0); navigate('/colleges-canteens'); }} className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white/10 text-white backdrop-blur-md border border-white/20 hover:bg-white/20 font-semibold transition-colors shadow-lg">
+                Partner with Us
+              </button>
+            </motion.div>
+          </div>
+          
+          {/* Scroll indicator */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.5, duration: 1 }}
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce text-white/50"
+          >
+            <ArrowRight className="w-6 h-6 rotate-90" />
+          </motion.div>
+        </section>
+      </StackCard>
+
+      {/* What is Canzo Section */}
+      <StackCard zIndex={1}>
+        <section className="relative flex flex-col overflow-hidden bg-background">
+          <div className="relative bg-accent pt-16 pb-[120px]">
+          <div className="absolute top-0 right-0 w-[min(40vw,400px)] aspect-square rounded-full bg-foreground/5 blur-[120px] pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-[min(30vw,300px)] aspect-square rounded-full bg-foreground/5 blur-[100px] pointer-events-none" />
+
+          <div className="container relative z-10">
+            <div className="text-center max-w-3xl mx-auto">
+              <motion.h2
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                className="text-display font-display font-bold leading-tight tracking-tight text-accent-foreground"
+              >
+                What is Canzo?
+              </motion.h2>
+              <motion.p
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+                className="mt-5 text-fluid-body text-accent-foreground/80 max-w-2xl mx-auto"
+              >
+                Canzo is a smart campus food platform that connects students,
+                canteen partners & colleges — making ordering, managing, and
+                dining effortless.
+              </motion.p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="relative -mt-4 sm:-mt-8 pb-[clamp(3rem,5vw,6rem)]">
-
-        <div className="container">
-          <motion.div
-            initial={ctaAnim.initial}
-            animate={ctaAnim.animate}
-            className="grid grid-cols-1 md:grid-cols-3 gap-[var(--space-gap)]"
-          >
-            {categories.map((cat, i) => (
-              <motion.button
-                key={cat.title}
-                onClick={() => {
-                  window.scrollTo(0, 0);
-                  navigate(cat.path);
-                }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.7 + i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={{ y: -6, scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="group relative flex flex-col overflow-hidden rounded-3xl bg-card border border-border shadow-xl text-left cursor-pointer"
-              >
-                <div className="relative w-full aspect-[4/3] overflow-hidden">
-                  <img
-                    src={cat.image}
-                    alt={cat.title}
-                    loading="lazy"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                </div>
-                <div className="p-6 sm:p-7 flex flex-col flex-1">
-                  <h3 className="text-xl sm:text-2xl font-display font-bold text-foreground tracking-tight">
-                    {cat.title}
-                  </h3>
-                  <p className="text-xs sm:text-sm font-semibold text-muted-foreground mt-1 uppercase tracking-wide">
-                    {cat.subtitle}
-                  </p>
-                  <p className="text-sm text-muted-foreground mt-3">
-                    {cat.desc}
-                  </p>
-                  <span className="inline-flex items-center justify-center gap-2 mt-5 px-5 py-2.5 rounded-full bg-accent text-accent-foreground font-semibold text-sm group-hover:bg-amber-hover transition-colors w-fit">
-                    Explore <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                  </span>
-                </div>
-              </motion.button>
-            ))}
-          </motion.div>
+        <div className="relative -mt-[80px] pb-[clamp(3rem,5vw,6rem)]">
+          <div className="container z-20 relative">
+            <motion.div
+              initial={ctaAnim.initial}
+              whileInView={ctaAnim.animate}
+              viewport={{ once: true, amount: 0.1 }}
+              className="grid grid-cols-1 md:grid-cols-3 gap-[var(--space-gap)]"
+            >
+              {categories.map((cat, i) => (
+                <motion.button
+                  key={cat.title}
+                  onClick={() => {
+                    window.scrollTo(0, 0);
+                    navigate(cat.path);
+                  }}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+                  whileHover={{ y: -6, scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="group relative flex flex-col overflow-hidden rounded-3xl bg-card border border-border shadow-xl text-left cursor-pointer"
+                >
+                  <div className="relative w-full aspect-[4/3] overflow-hidden">
+                    <img
+                      src={cat.image}
+                      alt={cat.title}
+                      loading="lazy"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="p-6 sm:p-7 flex flex-col flex-1">
+                    <h3 className="text-xl sm:text-2xl font-display font-bold text-foreground tracking-tight">
+                      {cat.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm font-semibold text-muted-foreground mt-1 uppercase tracking-wide">
+                      {cat.subtitle}
+                    </p>
+                    <p className="text-sm text-muted-foreground mt-3">
+                      {cat.desc}
+                    </p>
+                    <span className="inline-flex items-center justify-center gap-2 mt-5 px-5 py-2.5 rounded-full bg-accent text-accent-foreground font-semibold text-sm group-hover:bg-amber-hover transition-colors w-fit">
+                      Explore <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    </span>
+                  </div>
+                </motion.button>
+              ))}
+            </motion.div>
+          </div>
         </div>
-      </div>
-
-    </section>
+        </section>
+      </StackCard>
+    </>
   );
 };
 
