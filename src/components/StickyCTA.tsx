@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const StickyCTA = () => {
-  const navigate = useNavigate();
   const [show, setShow] = useState(false);
 
   useEffect(() => {
