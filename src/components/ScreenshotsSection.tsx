@@ -136,7 +136,6 @@ const ScreenshotsSection = () => {
         .coverflow-card {
           width: 100%;
           aspect-ratio: 9 / 18;
-          max-height: clamp(380px, 55svh, 540px);
           border-radius: 2rem;
           overflow: hidden;
           background: hsl(var(--card));
@@ -146,6 +145,16 @@ const ScreenshotsSection = () => {
           transform-origin: center center;
           transition: transform 1100ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 1100ms cubic-bezier(0.22, 1, 0.36, 1);
           will-change: transform;
+        }
+        @media (min-width: 1024px) {
+          .coverflow-slide {
+            width: clamp(200px, 18vw, 260px);
+          }
+        }
+        @media (min-width: 768px) and (max-width: 1023px) {
+          .coverflow-slide {
+            width: clamp(200px, 24vw, 280px);
+          }
         }
         .canzo-coverflow .swiper-wrapper {
           align-items: center;
