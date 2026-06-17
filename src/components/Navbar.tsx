@@ -34,7 +34,7 @@ const navLinks = [
   { label: "How It Works", href: "#how-it-works" },
   { label: "Ecosystem", href: "#ecosystem" },
   { label: "Demo", href: "#screenshots" },
-  { label: "Careers", href: "/internship" },
+  { label: "Careers", href: "/careers" },
   { label: "Help", href: "#help" },
   { label: "Contact Us", href: "mailto:info@canzo.in" },
 ];

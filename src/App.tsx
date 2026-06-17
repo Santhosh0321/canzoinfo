@@ -9,6 +9,8 @@ import CollegesCanteensPage from "./pages/CollegesCanteensPage";
 import InternshipPage from "./pages/InternshipPage";
 import InternshipApplyPage from "./pages/InternshipApplyPage";
 import WorkDetailPage from "./pages/WorkDetailPage";
+import CareersPage from "./pages/CareersPage";
+import CareersApplyPage from "./pages/CareersApplyPage";
 import NotFound from "./pages/NotFound";
 import Navbar from "./components/Navbar";
 
@@ -29,6 +31,8 @@ const App = () => (
               <Route path="/colleges-canteens" element={<CollegesCanteensPage />} />
               <Route path="/internship" element={<InternshipPage />} />
               <Route path="/internship/apply" element={<InternshipApplyPage />} />
+              <Route path="/careers" element={<CareersPage />} />
+              <Route path="/careers/apply" element={<CareersApplyPage />} />
               <Route path="/our-work/:slug" element={<WorkDetailPage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
