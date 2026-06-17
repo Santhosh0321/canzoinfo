@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import canzoLogo from "@/assets/logohero.png";
-import heroVideo from "@/assets/Student_uses_CANZO_in_canteen_202606171817.mp4";
+import heroVideo from "@/assets/herovideo4.mp4";
 import cardStudents from "@/assets/card-students.jpg";
 import cardCanteen from "@/assets/card-canteen.jpg";
 import cardInternship from "@/assets/card-internship.jpg";
