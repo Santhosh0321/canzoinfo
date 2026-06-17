@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import canzoLogo from "@/assets/logohero.png";
-import heroVideo from "@/assets/hero5.mp4";
+import heroVideo from "@/assets/hero6.mp4";
 import cardStudents from "@/assets/card-students.jpg";
 import cardCanteen from "@/assets/card-canteen.jpg";
 import cardInternship from "@/assets/card-internship.jpg";
@@ -71,6 +71,9 @@ const HeroSection = () => {
 
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0.2]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
+  const contentScale = useTransform(scrollYProgress, [0, 1], [1, 0.95]);
+  const blur = useTransform(scrollYProgress, [0, 1], ["blur(0px)", "blur(12px)"]);
 
   return (
     <>
@@ -90,12 +93,12 @@ const HeroSection = () => {
           </motion.div>
 
           {/* Hero Content */}
-          <div className="relative z-10 container flex flex-col items-center text-center px-4">
+          <motion.div style={{ opacity: contentOpacity, scale: contentScale, filter: blur }} className="absolute bottom-28 left-0 right-0 z-10 container mx-auto flex flex-col items-center text-center px-4">
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="relative h-24 md:h-32 mb-6 aspect-[1778/634]"
+              className="relative h-24 md:h-32 mb-1 aspect-[1778/634]"
             >
               <img 
                 src={canzoLogo} 
@@ -116,74 +119,30 @@ const HeroSection = () => {
                   transform: "translate(-50%, -50%)",
                 }}
               >
-                {/* Hour Hand */}
-                <div 
-                  className="absolute left-1/2 bottom-1/2 origin-bottom rounded-full"
-                  style={{
-                    width: "10%",
-                    height: "32%",
-                    backgroundColor: "#263138",
-                    transform: `translateX(-50%) rotate(${hourDegrees}deg)`,
-                  }}
-                />
-                
-                {/* Minute Hand */}
-                <div 
-                  className="absolute left-1/2 bottom-1/2 origin-bottom rounded-full"
-                  style={{
-                    width: "7%",
-                    height: "42%",
-                    backgroundColor: "#263138",
-                    transform: `translateX(-50%) rotate(${minuteDegrees}deg)`,
-                  }}
-                />
-
-                {/* Second Hand (Orange) */}
-                <div 
-                  className="absolute left-1/2 bottom-1/2 origin-bottom rounded-full"
-                  style={{
-                    width: "4%",
-                    height: "46%",
-                    backgroundColor: "#F99F1B",
-                    transform: `translateX(-50%) rotate(${secondDegrees}deg)`,
-                  }}
-                />
-                
-                {/* Center Pin */}
-                <div 
-                  className="absolute left-1/2 top-1/2 rounded-full -translate-x-1/2 -translate-y-1/2"
-                  style={{
-                    width: "15%",
-                    height: "15%",
-                    backgroundColor: "#263138",
-                  }}
-                />
+                <svg viewBox="0 0 100 100" className="w-full h-full absolute inset-0">
+                  <line x1={50} y1={50} x2={50 + 25 * Math.sin((hourDegrees * Math.PI) / 180)} y2={50 - 25 * Math.cos((hourDegrees * Math.PI) / 180)} stroke="#2d3748" strokeWidth={5} strokeLinecap="round" />
+                  <line x1={50} y1={50} x2={50 + 35 * Math.sin((minuteDegrees * Math.PI) / 180)} y2={50 - 35 * Math.cos((minuteDegrees * Math.PI) / 180)} stroke="#2d3748" strokeWidth={3.5} strokeLinecap="round" />
+                  <line x1={50} y1={50} x2={50 + 38 * Math.sin((secondDegrees * Math.PI) / 180)} y2={50 - 38 * Math.cos((secondDegrees * Math.PI) / 180)} stroke="#e8a838" strokeWidth={1.5} strokeLinecap="round" />
+                  <circle cx={50} cy={50} r={7.5} fill="#2d3748" />
+                </svg>
               </div>
             </motion.div>
             <motion.h1 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-              className="text-display font-display font-bold text-white tracking-tight mb-6 drop-shadow-lg leading-tight"
+              className="text-display font-display font-bold text-white tracking-tight mb-1 drop-shadow-lg leading-tight"
               style={{ textShadow: "0 4px 12px rgba(0,0,0,0.6)" }}
             >
               Because Time Matters
             </motion.h1>
-            <motion.p 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-              className="text-fluid-h3 font-medium text-white max-w-2xl mb-10 drop-shadow"
-              style={{ textShadow: "0 2px 8px rgba(0,0,0,0.6)" }}
-            >
-              The premium campus food platform connecting students and canteens. 
-              Skip the queue, order seamlessly, and dine effortlessly.
-            </motion.p>
+
+
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-              className="flex flex-wrap gap-4 justify-center"
+              className="flex flex-wrap gap-4 justify-center mt-8"
             >
               <button onClick={() => { window.scrollTo(0,0); navigate('/student'); }} className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-accent text-accent-foreground font-semibold hover:bg-amber-hover transition-colors shadow-lg">
                 Order Now <ArrowRight className="w-5 h-5" />
@@ -192,7 +151,7 @@ const HeroSection = () => {
                 Partner with Us
               </button>
             </motion.div>
-          </div>
+          </motion.div>
           
           {/* Scroll indicator */}
           <motion.div 
