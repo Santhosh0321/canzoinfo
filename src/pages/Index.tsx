@@ -11,6 +11,7 @@ import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import StickyCTA from "@/components/StickyCTA";
+import MobileTopCTAFooter from "@/components/MobileTopCTAFooter";
 
 const Index = () => {
   return (
