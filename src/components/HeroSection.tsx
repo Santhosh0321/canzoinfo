@@ -205,16 +205,16 @@ const HeroSection = () => {
 
 
             <motion.div 
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: "-20vh" }}
               animate={{ 
                 opacity: 1, 
-                y: showVideo ? "13vh" : "0vh" 
+                y: showVideo ? "0vh" : "-20vh" 
               }}
               transition={{ 
                 y: { type: "spring", stiffness: 70, damping: 14 },
                 opacity: { duration: 0.8, delay: 0.3 }
               }}
-              className="flex flex-wrap gap-4 justify-center mt-8 pointer-events-auto"
+              className="absolute bottom-[5vh] left-0 right-0 flex flex-wrap gap-4 justify-center pointer-events-auto px-4"
             >
               <button onClick={() => { window.scrollTo(0,0); navigate('/student'); }} className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-accent text-accent-foreground font-semibold hover:bg-amber-hover transition-colors shadow-lg">
                 Order Now <ArrowRight className="w-5 h-5" />
