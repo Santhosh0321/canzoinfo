@@ -43,39 +43,58 @@ const categories = [
   },
 ];
 
+// Phase state machine:
+// "intro"   → 0–3s: logo visible, video hidden (initial splash)
+// "playing" → video playing, logo hidden
+// "outro"   → video ended: logo visible for 5s, then loop back to playing
+type Phase = "intro" | "playing" | "outro";
+
 const HeroSection = () => {
   const navigate = useNavigate();
   const ref = useRef(null);
   
   const [time, setTime] = useState(new Date());
-  const [showLogo, setShowLogo] = useState(false);
-  const [showVideo, setShowVideo] = useState(true);
+  const [phase, setPhase] = useState<Phase>("intro");
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  const showLogo = phase === "intro" || phase === "outro";
+  const showVideo = phase === "playing";
+
+  // Live clock tick
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTime(new Date());
-    }, 1000);
+    const timer = setInterval(() => setTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
 
+  // INTRO → PLAYING: after 3 seconds, start video
   useEffect(() => {
-    if (!showVideo) {
+    const timer = setTimeout(() => {
+      setPhase("playing");
+      if (videoRef.current) {
+        videoRef.current.currentTime = 0;
+        videoRef.current.play().catch(() => {});
+      }
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []); // runs once on mount
+
+  // OUTRO → PLAYING: after 5 seconds of outro, replay video
+  useEffect(() => {
+    if (phase === "outro") {
       const timer = setTimeout(() => {
-        setShowVideo(true);
-        setShowLogo(false);
+        setPhase("playing");
         if (videoRef.current) {
           videoRef.current.currentTime = 0;
           videoRef.current.play().catch(() => {});
         }
-      }, 10000);
+      }, 5000);
       return () => clearTimeout(timer);
     }
-  }, [showVideo]);
+  }, [phase]);
 
+  // Video ends → switch to outro
   const handleVideoEnded = () => {
-    setShowVideo(false);
-    setShowLogo(true);
+    setPhase("outro");
   };
 
   const hours = time.getHours();
