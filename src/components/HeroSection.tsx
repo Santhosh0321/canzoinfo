@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import canzoLogo from "@/assets/logohero.png";
-import heroVideo from "@/assets/hero14.webm";
+import heroVideo from "@/assets/hero1.webm";
 import cardStudents from "@/assets/card-students.jpg";
 import cardCanteen from "@/assets/card-canteen.jpg";
 import cardInternship from "@/assets/card-internship.jpg";
@@ -139,7 +139,7 @@ const HeroSection = () => {
           </motion.div>
 
           {/* Hero Content */}
-          <motion.div style={{ opacity: contentOpacity, scale: contentScale, filter: blur }} className="absolute bottom-28 left-0 right-0 z-10 container mx-auto flex flex-col items-center text-center px-4 pointer-events-none">
+          <motion.div style={{ opacity: contentOpacity, scale: contentScale, filter: blur }} className="absolute inset-y-0 left-0 right-0 z-10 container mx-auto flex flex-col items-center justify-center text-center px-4 pointer-events-none">
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: showLogo ? 1 : 0, y: showLogo ? 0 : 30 }}
@@ -177,10 +177,15 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: showLogo ? 1 : 0, y: showLogo ? 0 : 30 }}
               transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-              className={`text-display font-display font-bold tracking-tight mb-1 leading-tight pointer-events-auto transition-all duration-1000 ${showVideo ? "text-white drop-shadow-lg" : "text-black"}`}
+              className="text-display font-display font-bold tracking-tight mb-1 leading-tight pointer-events-auto text-shadow-glow"
               style={{ textShadow: showVideo ? "0 4px 12px rgba(0,0,0,0.6)" : "none" }}
             >
-              Because Time Matters
+              <span className={`transition-colors duration-1000 ${showVideo ? "text-slate-300" : "text-slate-800"}`}>
+                Because Time{" "}
+              </span>
+              <span className={`transition-colors duration-1000 ${showVideo ? "text-[#fbbf24]" : "text-[#ca8a04]"}`}>
+                Matters
+              </span>
             </motion.h1>
 
 
