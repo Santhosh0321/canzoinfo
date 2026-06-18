@@ -207,10 +207,10 @@ const HeroSection = () => {
 
             {/* Buttons */}
             <motion.div 
-              initial={{ opacity: 0, bottom: "12vh" }}
+              initial={{ opacity: 0, bottom: "16vh" }}
               animate={{ 
                 opacity: 1, 
-                bottom: showVideo ? "5vh" : "12vh" 
+                bottom: showVideo ? "8vh" : "16vh" 
               }}
               transition={{ 
                 bottom: { type: "spring", stiffness: 70, damping: 14 },
