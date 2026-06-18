@@ -3,8 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import canzoLogo from "@/assets/logohero.png";
-import heroVideo from "@/assets/hero10.mp4";
-import heroBg from "@/assets/hero-bg.jpg";
+import heroVideo from "@/assets/hero12.mp4";
 import cardStudents from "@/assets/card-students.jpg";
 import cardCanteen from "@/assets/card-canteen.jpg";
 import cardInternship from "@/assets/card-internship.jpg";
@@ -50,12 +49,8 @@ const HeroSection = () => {
   
   const [time, setTime] = useState(new Date());
   const [showLogo, setShowLogo] = useState(false);
-
-  const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
-    const videoTime = e.currentTarget.currentTime;
-    // First 10 seconds hide, 10-17 seconds show, after 17 seconds hide.
-    setShowLogo(videoTime >= 10 && videoTime < 17);
-  };
+  const [showVideo, setShowVideo] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -63,6 +58,25 @@ const HeroSection = () => {
     }, 1000);
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    if (!showVideo) {
+      const timer = setTimeout(() => {
+        setShowVideo(true);
+        setShowLogo(false);
+        if (videoRef.current) {
+          videoRef.current.currentTime = 0;
+          videoRef.current.play().catch(() => {});
+        }
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [showVideo]);
+
+  const handleVideoEnded = () => {
+    setShowVideo(false);
+    setShowLogo(true);
+  };
 
   const hours = time.getHours();
   const minutes = time.getMinutes();
@@ -87,18 +101,21 @@ const HeroSection = () => {
     <>
       {/* Premium 100dvh Hero */}
       <StackCard zIndex={0}>
-        <section ref={ref} className="relative w-full h-[100dvh] overflow-hidden bg-black flex items-center justify-center">
+        <section 
+          ref={ref} 
+          className="relative w-full h-[100dvh] overflow-hidden flex items-center justify-center transition-colors duration-1000" 
+          style={{ backgroundColor: showVideo ? "#000000" : "hsl(var(--primary) / 0.05)" }}
+        >
           {/* Parallax Background */}
           <motion.div style={{ y, opacity }} className="absolute inset-0 z-0">
             <video 
+              ref={videoRef}
               src={heroVideo} 
               autoPlay 
-              loop 
               muted 
               playsInline
-              poster={heroBg}
-              onTimeUpdate={handleTimeUpdate}
-              className="w-full h-full object-cover opacity-70"
+              onEnded={handleVideoEnded}
+              className={`w-full h-full object-cover transition-opacity duration-1000 ${showVideo ? "opacity-70" : "opacity-0"}`}
             />
           </motion.div>
 
@@ -141,8 +158,8 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: showLogo ? 1 : 0, y: showLogo ? 0 : 30 }}
               transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-              className="text-display font-display font-bold text-white tracking-tight mb-1 drop-shadow-lg leading-tight pointer-events-auto"
-              style={{ textShadow: "0 4px 12px rgba(0,0,0,0.6)" }}
+              className={`text-display font-display font-bold tracking-tight mb-1 leading-tight pointer-events-auto transition-all duration-1000 ${showVideo ? "text-white drop-shadow-lg" : "text-black"}`}
+              style={{ textShadow: showVideo ? "0 4px 12px rgba(0,0,0,0.6)" : "none" }}
             >
               Because Time Matters
             </motion.h1>
@@ -157,7 +174,14 @@ const HeroSection = () => {
               <button onClick={() => { window.scrollTo(0,0); navigate('/student'); }} className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-accent text-accent-foreground font-semibold hover:bg-amber-hover transition-colors shadow-lg">
                 Order Now <ArrowRight className="w-5 h-5" />
               </button>
-              <button onClick={() => { window.scrollTo(0,0); navigate('/colleges-canteens'); }} className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white/10 text-white backdrop-blur-md border border-white/20 hover:bg-white/20 font-semibold transition-colors shadow-lg">
+              <button 
+                onClick={() => { window.scrollTo(0,0); navigate('/colleges-canteens'); }} 
+                className={`inline-flex items-center gap-2 px-8 py-4 rounded-full backdrop-blur-md border font-semibold transition-all duration-1000 shadow-lg ${
+                  showVideo 
+                    ? "bg-white/10 text-white border-white/20 hover:bg-white/20" 
+                    : "bg-black/10 text-black border-black/20 hover:bg-black/20"
+                }`}
+              >
                 Partner with Us
               </button>
             </motion.div>
@@ -168,7 +192,7 @@ const HeroSection = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.5, duration: 1 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce text-white/50"
+            className={`absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce transition-colors duration-1000 ${showVideo ? "text-white/50" : "text-black/50"}`}
           >
             <ArrowRight className="w-6 h-6 rotate-90" />
           </motion.div>

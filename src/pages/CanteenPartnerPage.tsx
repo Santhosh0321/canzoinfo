@@ -93,6 +93,8 @@ const CanteenPartnerPage = () => {
     formData.append("_captcha", "false");
     formData.append("_template", "table");
 
+    formData.append("name", values.ownerName);
+    formData.append("email", values.email);
     formData.append("Owner Name", values.ownerName);
     formData.append("Canteen Name", values.canteenName);
     formData.append("Phone", values.phone);
