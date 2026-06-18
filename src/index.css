@@ -77,13 +77,13 @@
 
 @layer base {
   :root {
-    /* Fluid type scale */
-    --fs-display: clamp(2.25rem, 4.2vw + 1rem, 5rem);
-    --fs-h1: clamp(2rem, 3vw + 1rem, 3.75rem);
-    --fs-h2: clamp(1.5rem, 1.6vw + 1rem, 2.5rem);
-    --fs-h3: clamp(1.15rem, 0.6vw + 1rem, 1.6rem);
-    --fs-body: clamp(0.95rem, 0.35vw + 0.85rem, 1.125rem);
-    --fs-small: clamp(0.8rem, 0.15vw + 0.75rem, 0.9rem);
+    /* Fluid type scale - fully responsive to width AND height */
+    --fs-display: clamp(2.25rem, min(4.2vw, 5vh) + 1rem, 5rem);
+    --fs-h1: clamp(2rem, min(3vw, 4vh) + 1rem, 3.75rem);
+    --fs-h2: clamp(1.5rem, min(1.6vw, 2.5vh) + 1rem, 2.5rem);
+    --fs-h3: clamp(1.15rem, min(0.6vw, 1.2vh) + 1rem, 1.6rem);
+    --fs-body: clamp(0.95rem, min(0.35vw, 0.6vh) + 0.85rem, 1.125rem);
+    --fs-small: clamp(0.8rem, min(0.15vw, 0.3vh) + 0.75rem, 0.9rem);
     /* Fluid spacing */
     --space-section-y: clamp(3rem, 5.5vw, 6.5rem);
     --space-section-x: clamp(1rem, 4vw, 4rem);
