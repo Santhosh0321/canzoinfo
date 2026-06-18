@@ -81,26 +81,24 @@ const CareersApplyPage = () => {
     },
   });
 
-  const isSubmitted = searchParams.get("submitted") === "true";
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState("");
-
   useEffect(() => {
     if (roleParam) {
       form.setValue("role", roleParam);
     }
   }, [roleParam, form]);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+
   const onSubmit = async (values: FormValues) => {
     setIsSubmitting(true);
     setSubmitError("");
 
     const formData = new FormData();
+    // FormSubmit.co special fields
     formData.append("_subject", `New Career Application: ${values.role} - ${values.name}`);
     formData.append("_captcha", "false");
     formData.append("_template", "table");
-    formData.append("_next", window.location.href.split("?")[0] + "?submitted=true");
 
     formData.append("Name", values.name);
     formData.append("Phone", values.phone);
@@ -119,20 +117,26 @@ const CareersApplyPage = () => {
     try {
       const response = await fetch("https://formsubmit.co/tamiltamilboss090@gmail.com", {
         method: "POST",
+        headers: { Accept: "application/json" },
         body: formData,
       });
 
-      if (response.ok || response.redirected) {
-        window.location.href = window.location.href.split("?")[0] + "?submitted=true";
+      if (response.ok) {
+        // Success handled by react-hook-form's isSubmitSuccessful
       } else {
-        setSubmitError("Something went wrong. Please try again.");
+        const data = await response.json().catch(() => ({}));
+        setSubmitError(data.message || "Something went wrong. Please try again.");
+        throw new Error(data.message || "Submission failed");
       }
-    } catch {
-      setSubmitError("Network error. Please check your connection and try again.");
+    } catch (error) {
+      console.error("Error submitting application:", error);
+      throw error;
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  const isSubmitted = form.formState.isSubmitSuccessful;
 
   return (
     <div className="min-h-screen flex flex-col">
