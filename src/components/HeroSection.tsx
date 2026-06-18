@@ -139,83 +139,84 @@ const HeroSection = () => {
           </motion.div>
 
           {/* Hero Content */}
-          <motion.div style={{ opacity: contentOpacity, scale: contentScale, filter: blur }} className="absolute inset-y-0 left-0 right-0 z-10 container mx-auto flex flex-col items-center pt-[20vh] md:pt-[25vh] text-center px-4 pointer-events-none">
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: showLogo ? 1 : 0, y: showLogo ? 0 : 30 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="relative h-28 md:h-44 mb-3 aspect-[1778/634] pointer-events-auto"
-            >
-              <img 
-                src={canzoLogo} 
-                alt="Canzo Logo" 
-                className="w-full h-full object-contain" 
-              />
-              
-              {/* Real-time Clock overlay — positioned over the inner gray clock face inside the 'O' */}
-              <div 
-                className="absolute"
-                style={{
-                  /* Center precisely on the inner gray clock face */
-                  left: "87.50%",
-                  top: "53.16%",
-                  /* Match the inner gray circle size exactly */
-                  width: "15.43%",
-                  height: "42.72%",
-                  transform: "translate(-50%, -50%)",
-                }}
+          <motion.div style={{ opacity: contentOpacity, scale: contentScale, filter: blur }} className="absolute inset-y-0 left-0 right-0 z-10 container mx-auto px-4 pointer-events-none">
+            
+            {/* Logo and Tagline Centered at 45% */}
+            <div className="absolute top-[45%] left-0 right-0 -translate-y-1/2 flex flex-col items-center text-center">
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: showLogo ? 1 : 0, y: showLogo ? 0 : 30 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                className="relative w-full max-w-lg md:max-w-2xl px-4 mb-3 aspect-[1778/634] pointer-events-auto"
               >
-                <svg viewBox="0 0 100 100" className="w-full h-full absolute inset-0">
-                  <line x1={50} y1={50} x2={50 + 25 * Math.sin((hourDegrees * Math.PI) / 180)} y2={50 - 25 * Math.cos((hourDegrees * Math.PI) / 180)} stroke="#2d3748" strokeWidth={5} strokeLinecap="round" />
-                  <line x1={50} y1={50} x2={50 + 35 * Math.sin((minuteDegrees * Math.PI) / 180)} y2={50 - 35 * Math.cos((minuteDegrees * Math.PI) / 180)} stroke="#2d3748" strokeWidth={3.5} strokeLinecap="round" />
-                  <line x1={50} y1={50} x2={50 + 38 * Math.sin((secondDegrees * Math.PI) / 180)} y2={50 - 38 * Math.cos((secondDegrees * Math.PI) / 180)} stroke="#e8a838" strokeWidth={1.5} strokeLinecap="round" />
-                  <circle cx={50} cy={50} r={7.5} fill="#2d3748" />
-                </svg>
-              </div>
-            </motion.div>
-            <motion.h1 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: showLogo ? 1 : 0, y: showLogo ? 0 : 30 }}
-              transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-              className="text-display font-display font-bold tracking-tight mb-2 leading-tight pointer-events-auto"
-            >
-              <span 
-                className={`transition-colors duration-1000 ${showVideo ? "text-slate-200" : "text-[#1e293b]"}`}
-                style={{ textShadow: showVideo ? "0 4px 12px rgba(0,0,0,0.6)" : "none" }}
+                <img 
+                  src={canzoLogo} 
+                  alt="Canzo Logo" 
+                  className="w-full h-full object-contain" 
+                />
+                
+                {/* Real-time Clock overlay */}
+                <div 
+                  className="absolute"
+                  style={{
+                    left: "87.50%",
+                    top: "53.16%",
+                    width: "15.43%",
+                    height: "42.72%",
+                    transform: "translate(-50%, -50%)",
+                  }}
+                >
+                  <svg viewBox="0 0 100 100" className="w-full h-full absolute inset-0">
+                    <line x1={50} y1={50} x2={50 + 25 * Math.sin((hourDegrees * Math.PI) / 180)} y2={50 - 25 * Math.cos((hourDegrees * Math.PI) / 180)} stroke="#2d3748" strokeWidth={5} strokeLinecap="round" />
+                    <line x1={50} y1={50} x2={50 + 35 * Math.sin((minuteDegrees * Math.PI) / 180)} y2={50 - 35 * Math.cos((minuteDegrees * Math.PI) / 180)} stroke="#2d3748" strokeWidth={3.5} strokeLinecap="round" />
+                    <line x1={50} y1={50} x2={50 + 38 * Math.sin((secondDegrees * Math.PI) / 180)} y2={50 - 38 * Math.cos((secondDegrees * Math.PI) / 180)} stroke="#e8a838" strokeWidth={1.5} strokeLinecap="round" />
+                    <circle cx={50} cy={50} r={7.5} fill="#2d3748" />
+                  </svg>
+                </div>
+              </motion.div>
+              <motion.h1 
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: showLogo ? 1 : 0, y: showLogo ? 0 : 30 }}
+                transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
+                className="text-display font-display font-bold tracking-tight mb-2 leading-tight pointer-events-auto"
               >
-                Because Time{" "}
-              </span>
-              <span 
-                className={`bg-clip-text text-transparent bg-gradient-to-r transition-all duration-1000 ${
-                  showVideo 
-                    ? "from-slate-200 to-[#fbbf24]" 
-                    : "from-[#1e293b] to-[#ca8a04]"
-                }`}
-                style={{ 
-                  textShadow: showVideo 
-                    ? "0 4px 12px rgba(0,0,0,0.6), 0 0 20px rgba(251,191,36,0.3)" 
-                    : "none",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent"
-                }}
-              >
-                Matters
-              </span>
-            </motion.h1>
+                <span 
+                  className={`transition-colors duration-1000 ${showVideo ? "text-slate-200" : "text-[#1e293b]"}`}
+                  style={{ textShadow: showVideo ? "0 4px 12px rgba(0,0,0,0.6)" : "none" }}
+                >
+                  Because Time{" "}
+                </span>
+                <span 
+                  className={`bg-clip-text text-transparent bg-gradient-to-r transition-all duration-1000 ${
+                    showVideo 
+                      ? "from-slate-200 to-[#fbbf24]" 
+                      : "from-[#1e293b] to-[#ca8a04]"
+                  }`}
+                  style={{ 
+                    textShadow: showVideo 
+                      ? "0 4px 12px rgba(0,0,0,0.6), 0 0 20px rgba(251,191,36,0.3)" 
+                      : "none",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent"
+                  }}
+                >
+                  Matters
+                </span>
+              </motion.h1>
+            </div>
 
-
+            {/* Buttons */}
             <motion.div 
-              initial={{ opacity: 0, y: "-15vh" }}
+              initial={{ opacity: 0, bottom: "12vh" }}
               animate={{ 
                 opacity: 1, 
-                y: showVideo ? "0vh" : "-8vh" 
+                bottom: showVideo ? "5vh" : "12vh" 
               }}
               transition={{ 
-                y: { type: "spring", stiffness: 70, damping: 14 },
+                bottom: { type: "spring", stiffness: 70, damping: 14 },
                 opacity: { duration: 0.8, delay: 0.3 }
               }}
               className="absolute left-0 right-0 flex flex-wrap gap-4 justify-center pointer-events-auto px-4"
-              style={{ bottom: "clamp(60px, 15vh, 100px)" }}
             >
               <button onClick={() => { window.scrollTo(0,0); navigate('/student'); }} className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-accent text-accent-foreground font-semibold hover:bg-amber-hover transition-colors shadow-lg">
                 Order Now <ArrowRight className="w-5 h-5" />
