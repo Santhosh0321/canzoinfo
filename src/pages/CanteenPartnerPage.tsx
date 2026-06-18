@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowLeft, Store, Receipt, BarChart3, Package, Megaphone, Clock, CheckCircle2, FileText } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
@@ -68,8 +68,6 @@ const fadeUp = {
 
 const CanteenPartnerPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState("");
-
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -85,46 +83,27 @@ const CanteenPartnerPage = () => {
     },
   });
 
-  const onSubmit = async (values: FormValues) => {
+  const onSubmit = (values: FormValues) => {
     setIsSubmitting(true);
-    setSubmitError("");
+    
+    // Remove old hidden inputs if any to prevent duplicates
+    formRef.current?.querySelectorAll('input[type="hidden"]').forEach(el => el.remove());
 
-    const formData = new FormData();
-    // FormSubmit.co special fields
-    formData.append("_subject", `New Partner Application: ${values.canteenName} - ${values.ownerName}`);
-    formData.append("_captcha", "false");
-    formData.append("_template", "table");
-    formData.append("_next", window.location.href.split("?")[0] + "?submitted=true");
+    const addHiddenField = (name: string, value: string) => {
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = name;
+      input.value = value;
+      formRef.current?.appendChild(input);
+    };
 
-    formData.append("Owner Name", values.ownerName);
-    formData.append("Canteen Name", values.canteenName);
-    formData.append("Phone", values.phone);
-    formData.append("Email", values.email);
-    formData.append("College / Institution", values.collegeName);
-    formData.append("City", values.city);
-    formData.append("Number of Outlets", values.outletCount);
-    formData.append("Daily Order Volume", values.dailyOrders);
+    addHiddenField("_subject", `New Partner Application: ${values.canteenName} - ${values.ownerName}`);
+    addHiddenField("_captcha", "false");
+    addHiddenField("_template", "table");
+    addHiddenField("_next", window.location.href.split("?")[0] + "?submitted=true");
 
-    if (values.presentation && values.presentation[0]) {
-      formData.append("Presentation", values.presentation[0]);
-    }
-
-    try {
-      const response = await fetch("https://formsubmit.co/tamiltamilboss090@gmail.com", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (response.ok || response.redirected) {
-        window.location.href = window.location.href.split("?")[0] + "?submitted=true";
-      } else {
-        setSubmitError("Something went wrong. Please try again.");
-      }
-    } catch {
-      setSubmitError("Network error. Please check your connection and try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
+    // Submit the form natively so FormSubmit can show its activation page if needed
+    formRef.current?.submit();
   };
 
   const isSubmitted = searchParams.get("submitted") === "true";
@@ -208,7 +187,7 @@ const CanteenPartnerPage = () => {
                     </Button>
                   </Link>
                   <Button
-                    onClick={() => form.reset(undefined, { keepIsSubmitSuccessful: false })}
+                    onClick={() => form.reset()}
                     className="rounded-full bg-accent text-accent-foreground hover:bg-amber-hover"
                   >
                     Submit Another Application
@@ -218,7 +197,14 @@ const CanteenPartnerPage = () => {
             ) : (
               <div className="p-6 sm:p-10 rounded-2xl bg-card border border-border shadow-sm">
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                  <form 
+                  ref={formRef}
+                  action="https://formsubmit.co/tamiltamilboss090@gmail.com"
+                  method="POST"
+                  encType="multipart/form-data"
+                  onSubmit={form.handleSubmit(onSubmit)} 
+                  className="space-y-8"
+                >
                     {/* Owner & Canteen Details */}
                     <div className="space-y-5">
                       <h3 className="text-lg font-display font-semibold text-foreground">Canteen Details</h3>
