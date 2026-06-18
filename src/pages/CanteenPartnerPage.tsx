@@ -88,7 +88,26 @@ const CanteenPartnerPage = () => {
     setSubmitError("");
 
     const formData = new FormData();
+        const formData = new FormData();
     // FormSubmit.co special fields
+    formData.append("_subject", `New Partner Application: ${values.canteenName} – ${values.ownerName}`);
+    formData.append("_captcha", "false");
+    formData.append("_template", "table");
+    formData.append("_replyto", values.email); // explicit reply-to
+
+    // Form fields (lowercase, no duplicates, no spaces)
+    formData.append("name", values.ownerName);
+    formData.append("phone", values.phone);
+    formData.append("email", values.email);
+    formData.append("canteen", values.canteenName);
+    formData.append("college", values.collegeName);
+    formData.append("city", values.city);
+    formData.append("outlets", values.outletCount);
+    formData.append("daily_orders", values.dailyOrders);
+
+    if (values.presentation) {
+      formData.append("presentation_link", values.presentation);
+    }
     formData.append("_subject", `New Partner Application: ${values.canteenName} - ${values.ownerName}`);
     formData.append("_captcha", "false");
     formData.append("_template", "table");
@@ -96,6 +115,7 @@ const CanteenPartnerPage = () => {
     formData.append("Name", values.ownerName);
     formData.append("Phone", values.phone);
     formData.append("Email", values.email);
+    formData.append("email", values.email);
     formData.append("Canteen", values.canteenName);
     formData.append("College", values.collegeName);
     formData.append("City", values.city);
