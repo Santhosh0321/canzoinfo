@@ -116,15 +116,18 @@ const CareersApplyPage = () => {
       });
 
       if (response.ok) {
+        const data = await response.json().catch(() => ({}));
+        if (data.success === "false" || data.success === false) {
+          setSubmitError(data.message || "FormSubmit rejected the submission.");
+        }
         // Success handled by react-hook-form's isSubmitSuccessful
       } else {
         const data = await response.json().catch(() => ({}));
         setSubmitError(data.message || "Something went wrong. Please try again.");
-        throw new Error(data.message || "Submission failed");
       }
     } catch (error) {
       console.error("Error submitting application:", error);
-      throw error;
+      setSubmitError("Failed to connect to the server. Please check your internet connection.");
     } finally {
       setIsSubmitting(false);
     }

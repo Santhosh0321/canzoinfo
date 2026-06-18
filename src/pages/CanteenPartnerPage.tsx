@@ -116,15 +116,19 @@ const CanteenPartnerPage = () => {
       });
 
       if (response.ok) {
-        setIsSubmitSuccess(true);
+        const data = await response.json().catch(() => ({}));
+        if (data.success === "false" || data.success === false) {
+          setSubmitError(data.message || "FormSubmit rejected the submission.");
+        } else {
+          setIsSubmitSuccess(true);
+        }
       } else {
         const data = await response.json().catch(() => ({}));
         setSubmitError(data.message || "Something went wrong. Please try again.");
-        throw new Error(data.message || "Submission failed");
       }
     } catch (error) {
       console.error("Error submitting partner application:", error);
-      // Ensure we don't throw an unhandled promise rejection that might break React
+      setSubmitError("Failed to connect to the server. Please check your internet connection.");
     } finally {
       setIsSubmitting(false);
     }
