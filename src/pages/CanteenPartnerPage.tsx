@@ -1,7 +1,31 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowRight, ArrowLeft, Store, Receipt, BarChart3, Package, Megaphone, Clock } from "lucide-react";
+import { ArrowRight, ArrowLeft, Store, Receipt, BarChart3, Package, Megaphone, Clock, CheckCircle2, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import Footer from "@/components/Footer";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
 const stats = [
   { label: "Partner Vendors", value: "50+", icon: Store },
@@ -19,6 +43,22 @@ const features = [
   { icon: Store, title: "Multi-Outlet Support", desc: "Manage multiple outlets from a single dashboard. Perfect for canteen chains on campus." },
 ];
 
+const formSchema = z.object({
+  ownerName: z.string().min(2, "Owner name is required").max(100),
+  canteenName: z.string().min(2, "Canteen name is required").max(200),
+  phone: z.string().min(10, "Enter a valid phone number").max(15),
+  email: z.string().email("Enter a valid email address").max(255),
+  collegeName: z.string().min(2, "College / Institution name is required").max(200),
+  city: z.string().min(2, "City is required").max(100),
+  outletCount: z.string().min(1, "Please select number of outlets"),
+  dailyOrders: z.string().min(1, "Please select daily order volume"),
+  presentation: z
+    .any()
+    .optional(),
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
 const fadeUp = {
   initial: { opacity: 0, y: 30 },
   whileInView: { opacity: 1, y: 0 },
@@ -26,63 +66,369 @@ const fadeUp = {
   transition: { duration: 0.5 },
 };
 
-const CanteenPartnerPage = () => (
-  <div className="min-h-screen">
-    <section className="pt-28 pb-20 relative overflow-hidden">
-      <div className="absolute top-10 -right-20 w-[500px] h-[500px] rounded-full bg-accent/15 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 -left-32 w-[300px] h-[300px] rounded-full bg-accent/10 blur-[80px] pointer-events-none" />
+const CanteenPartnerPage = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
-      <div className="container">
-        <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8">
-          <ArrowLeft className="w-4 h-4" /> Back to Home
-        </Link>
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      ownerName: "",
+      canteenName: "",
+      phone: "",
+      email: "",
+      collegeName: "",
+      city: "",
+      outletCount: "",
+      dailyOrders: "",
+      presentation: undefined,
+    },
+  });
 
-        <motion.div {...fadeUp} className="max-w-2xl mb-16">
-          <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-accent/15 text-accent-foreground text-xs font-semibold tracking-wide uppercase border border-accent/20 mb-4">
-            🏪 For Canteen Partners
-          </span>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-6">
-            Grow your canteen<br />
-            <span className="text-gradient">business digitally.</span>
-          </h1>
-          <p className="text-lg text-muted-foreground leading-relaxed">
-            Manage orders, inventory, and billing from one dashboard. Reach more students and increase your revenue with Canzo.
-          </p>
-        </motion.div>
+  const onSubmit = async (values: FormValues) => {
+    setIsSubmitting(true);
+    setSubmitError("");
 
-        <motion.div {...fadeUp} className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-20">
-          {stats.map((s) => (
-            <div key={s.label} className="p-6 rounded-2xl bg-card border border-border text-center">
-              <s.icon className="w-6 h-6 text-accent mx-auto mb-3" />
-              <div className="text-2xl sm:text-3xl font-display font-bold text-foreground">{s.value}</div>
-              <div className="text-xs text-muted-foreground mt-1">{s.label}</div>
+    const formData = new FormData();
+    // FormSubmit.co special fields
+    formData.append("_subject", `New Partner Application: ${values.canteenName} - ${values.ownerName}`);
+    formData.append("_captcha", "false");
+    formData.append("_template", "table");
+
+    formData.append("Owner Name", values.ownerName);
+    formData.append("Canteen Name", values.canteenName);
+    formData.append("Phone", values.phone);
+    formData.append("Email", values.email);
+    formData.append("College / Institution", values.collegeName);
+    formData.append("City", values.city);
+    formData.append("Number of Outlets", values.outletCount);
+    formData.append("Daily Order Volume", values.dailyOrders);
+
+    if (values.presentation && values.presentation[0]) {
+      formData.append("Presentation", values.presentation[0]);
+    }
+
+    try {
+      const response = await fetch("https://formsubmit.co/tamiltamilboss090@gmail.com", {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: formData,
+      });
+
+      if (response.ok) {
+        // Success — react-hook-form's isSubmitSuccessful handles display
+      } else {
+        const data = await response.json().catch(() => ({}));
+        setSubmitError(data.message || "Something went wrong. Please try again.");
+        throw new Error(data.message || "Submission failed");
+      }
+    } catch (error) {
+      console.error("Error submitting partner application:", error);
+      throw error;
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const isSubmitted = form.formState.isSubmitSuccessful;
+
+  return (
+    <div className="min-h-screen">
+      <section className="pt-28 pb-20 relative overflow-hidden">
+        <div className="absolute top-10 -right-20 w-[500px] h-[500px] rounded-full bg-accent/15 blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-0 -left-32 w-[300px] h-[300px] rounded-full bg-accent/10 blur-[80px] pointer-events-none" />
+
+        <div className="container">
+          <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-8">
+            <ArrowLeft className="w-4 h-4" /> Back to Home
+          </Link>
+
+          <motion.div {...fadeUp} className="max-w-2xl mb-16">
+            <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-accent/15 text-accent-foreground text-xs font-semibold tracking-wide uppercase border border-accent/20 mb-4">
+              🏪 For Canteen Partners
+            </span>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold leading-tight tracking-tight mb-6">
+              Grow your canteen<br />
+              <span className="text-gradient">business digitally.</span>
+            </h1>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              Manage orders, inventory, and billing from one dashboard. Reach more students and increase your revenue with Canzo.
+            </p>
+          </motion.div>
+
+          <motion.div {...fadeUp} className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-20">
+            {stats.map((s) => (
+              <div key={s.label} className="p-6 rounded-2xl bg-card border border-border text-center">
+                <s.icon className="w-6 h-6 text-accent mx-auto mb-3" />
+                <div className="text-2xl sm:text-3xl font-display font-bold text-foreground">{s.value}</div>
+                <div className="text-xs text-muted-foreground mt-1">{s.label}</div>
+              </div>
+            ))}
+          </motion.div>
+
+          <motion.h2 {...fadeUp} className="text-2xl sm:text-3xl font-display font-bold mb-10">
+            Tools to <span className="text-gradient">scale</span>
+          </motion.h2>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+            {features.map((f, i) => (
+              <motion.div key={f.title} {...fadeUp} transition={{ duration: 0.5, delay: i * 0.08 }} className="p-6 rounded-2xl bg-card border border-border hover:border-accent/30 transition-colors">
+                <f.icon className="w-8 h-8 text-accent mb-4" />
+                <h3 className="font-display font-semibold text-foreground mb-2">{f.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Partner Application Form */}
+          <motion.div {...fadeUp} className="max-w-3xl mx-auto">
+            <div className="text-center mb-10">
+              <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-accent/15 text-accent-foreground text-xs font-semibold tracking-wide uppercase border border-accent/20 mb-4">
+                Become a Partner
+              </span>
+              <h2 className="text-3xl sm:text-4xl font-display font-bold mb-3">
+                Ready to <span className="text-gradient">join Canzo?</span>
+              </h2>
+              <p className="text-muted-foreground text-base">
+                Fill in your details below and our team will reach out within 24 hours.
+              </p>
             </div>
-          ))}
-        </motion.div>
 
-        <motion.h2 {...fadeUp} className="text-2xl sm:text-3xl font-display font-bold mb-10">
-          Tools to <span className="text-gradient">scale</span>
-        </motion.h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-          {features.map((f, i) => (
-            <motion.div key={f.title} {...fadeUp} transition={{ duration: 0.5, delay: i * 0.08 }} className="p-6 rounded-2xl bg-card border border-border hover:border-accent/30 transition-colors">
-              <f.icon className="w-8 h-8 text-accent mb-4" />
-              <h3 className="font-display font-semibold text-foreground mb-2">{f.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{f.desc}</p>
-            </motion.div>
-          ))}
+            {isSubmitted ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="p-8 sm:p-12 rounded-2xl bg-accent/10 border border-accent/20 text-center"
+              >
+                <CheckCircle2 className="w-14 h-14 text-accent mx-auto mb-4" />
+                <h2 className="text-2xl font-display font-bold mb-2">Application Received!</h2>
+                <p className="text-muted-foreground mb-6">
+                  Thank you for your interest in partnering with Canzo! Our team will review your details and reach out to you within 24 hours.
+                </p>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                  <Link to="/">
+                    <Button variant="outline" className="rounded-full">
+                      Back to Home
+                    </Button>
+                  </Link>
+                  <Button
+                    onClick={() => form.reset(undefined, { keepIsSubmitSuccessful: false })}
+                    className="rounded-full bg-accent text-accent-foreground hover:bg-amber-hover"
+                  >
+                    Submit Another Application
+                  </Button>
+                </div>
+              </motion.div>
+            ) : (
+              <div className="p-6 sm:p-10 rounded-2xl bg-card border border-border shadow-sm">
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    {/* Owner & Canteen Details */}
+                    <div className="space-y-5">
+                      <h3 className="text-lg font-display font-semibold text-foreground">Canteen Details</h3>
+                      <div className="grid sm:grid-cols-2 gap-5">
+                        <FormField
+                          control={form.control}
+                          name="ownerName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Owner / Manager Name <span className="text-destructive">*</span></FormLabel>
+                              <FormControl>
+                                <Input placeholder="Your full name" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="canteenName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Canteen / Restaurant Name <span className="text-destructive">*</span></FormLabel>
+                              <FormControl>
+                                <Input placeholder="Your canteen name" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+
+                      <div className="grid sm:grid-cols-2 gap-5">
+                        <FormField
+                          control={form.control}
+                          name="phone"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Phone Number <span className="text-destructive">*</span></FormLabel>
+                              <FormControl>
+                                <Input type="tel" placeholder="+91 98765 43210" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="email"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Email ID <span className="text-destructive">*</span></FormLabel>
+                              <FormControl>
+                                <Input type="email" placeholder="you@example.com" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Location Details */}
+                    <div className="space-y-5">
+                      <h3 className="text-lg font-display font-semibold text-foreground">Location Details</h3>
+                      <div className="grid sm:grid-cols-2 gap-5">
+                        <FormField
+                          control={form.control}
+                          name="collegeName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>College / Institution Name <span className="text-destructive">*</span></FormLabel>
+                              <FormControl>
+                                <Input placeholder="e.g., Anna University" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="city"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>City <span className="text-destructive">*</span></FormLabel>
+                              <FormControl>
+                                <Input placeholder="e.g., Chennai" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Business Details */}
+                    <div className="space-y-5">
+                      <h3 className="text-lg font-display font-semibold text-foreground">Business Details</h3>
+                      <div className="grid sm:grid-cols-2 gap-5">
+                        <FormField
+                          control={form.control}
+                          name="outletCount"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Number of Outlets <span className="text-destructive">*</span></FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select number of outlets" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="1">1 Outlet</SelectItem>
+                                  <SelectItem value="2-3">2–3 Outlets</SelectItem>
+                                  <SelectItem value="4-10">4–10 Outlets</SelectItem>
+                                  <SelectItem value="10+">10+ Outlets</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="dailyOrders"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Approx. Daily Orders <span className="text-destructive">*</span></FormLabel>
+                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select daily volume" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="<50">Less than 50</SelectItem>
+                                  <SelectItem value="50-150">50–150 orders</SelectItem>
+                                  <SelectItem value="150-300">150–300 orders</SelectItem>
+                                  <SelectItem value="300+">300+ orders</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Presentation Upload */}
+                    <FormField
+                      control={form.control}
+                      name="presentation"
+                      render={({ field: { onChange, value, ref, ...rest } }) => (
+                        <FormItem className="space-y-3">
+                          <FormLabel>Presentation About Yourself (Optional)</FormLabel>
+                          <FormControl>
+                            <div className="flex flex-col gap-3">
+                              <Label
+                                htmlFor="partner-presentation-upload"
+                                className="inline-flex items-center gap-2 px-4 py-3 rounded-lg border border-dashed border-border bg-background hover:bg-accent/5 cursor-pointer transition-colors"
+                              >
+                                <FileText className="w-5 h-5 text-accent" />
+                                <span className="text-sm text-foreground">
+                                  {value && value.length === 1 ? value[0].name : "Choose a file"}
+                                </span>
+                              </Label>
+                              <Input
+                                id="partner-presentation-upload"
+                                type="file"
+                                accept=".pdf,.doc,.docx,.ppt,.pptx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                                ref={ref}
+                                onChange={(e) => onChange(e.target.files)}
+                                {...rest}
+                                className="hidden"
+                              />
+                              <p className="text-xs text-muted-foreground">Upload 1 supported file (PDF, DOC, PPT). Max 10 MB.</p>
+                            </div>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {submitError && (
+                      <div className="p-3 rounded-md bg-destructive/10 text-destructive text-sm font-medium">
+                        {submitError}
+                      </div>
+                    )}
+
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full rounded-full bg-accent text-accent-foreground font-semibold text-base hover:bg-amber-hover transition-all glow-amber h-12"
+                    >
+                      {isSubmitting ? "Submitting Application..." : "Become a Partner"}
+                      {!isSubmitting && <ArrowRight className="w-4 h-4 ml-2" />}
+                    </Button>
+                  </form>
+                </Form>
+              </div>
+            )}
+          </motion.div>
         </div>
-
-        <motion.div {...fadeUp} className="text-center">
-          <a href="https://canzo.in" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2.5 px-10 py-4 rounded-full bg-accent text-accent-foreground font-semibold text-base hover:bg-amber-hover transition-all glow-amber">
-            Partner with Canzo
-            <ArrowRight className="w-4 h-4" />
-          </a>
-        </motion.div>
-      </div>
-    </section>
-    <Footer />
-  </div>
-);
+      </section>
+      <Footer />
+    </div>
+  );
+};
 
 export default CanteenPartnerPage;

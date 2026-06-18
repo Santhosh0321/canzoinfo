@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useState } from "react";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -61,6 +62,7 @@ const formSchema = z.object({
     .refine((files) => files.length === 1, "Resume is required")
     .refine((files) => files[0]?.size <= MAX_FILE_SIZE, "File must be under 10 MB")
     .refine((files) => ACCEPTED_FILE_TYPES.includes(files[0]?.type), "Only PDF or DOC files are allowed"),
+  presentation: z.any().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -87,13 +89,61 @@ const InternshipApplyPage = () => {
       skillLevel: undefined,
       hasLaptop: undefined,
       resume: undefined,
+      presentation: undefined,
     },
   });
 
-  const onSubmit = (values: FormValues) => {
-    // eslint-disable-next-line no-console
-    console.log("Internship application submitted:", values);
-    form.reset();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+
+  const onSubmit = async (values: FormValues) => {
+    setIsSubmitting(true);
+    setSubmitError("");
+
+    const formData = new FormData();
+    // FormSubmit.co special fields
+    formData.append("_subject", `New Internship Application: ${values.name} - ${values.college}`);
+    formData.append("_captcha", "false");
+    formData.append("_template", "table");
+
+    formData.append("Name", values.name);
+    formData.append("Phone", values.phone);
+    formData.append("Email", values.email);
+    formData.append("College", values.college);
+    formData.append("Department", values.department);
+    formData.append("Year of Study", values.yearOfStudy);
+    formData.append("Interests", values.interests.join(", "));
+    if (values.otherInterest) formData.append("Other Interest", values.otherInterest);
+    formData.append("Skill Level", values.skillLevel);
+    formData.append("Has Laptop", values.hasLaptop);
+
+    if (values.resume && values.resume[0]) {
+      formData.append("Resume", values.resume[0]);
+    }
+    if (values.presentation && values.presentation[0]) {
+      formData.append("Presentation", values.presentation[0]);
+    }
+
+    try {
+      const response = await fetch("https://formsubmit.co/tamiltamilboss090@gmail.com", {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: formData,
+      });
+
+      if (response.ok) {
+        // Success handled by react-hook-form's isSubmitSuccessful
+      } else {
+        const data = await response.json().catch(() => ({}));
+        setSubmitError(data.message || "Something went wrong. Please try again.");
+        throw new Error(data.message || "Submission failed");
+      }
+    } catch (error) {
+      console.error("Error submitting application:", error);
+      throw error;
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const isSubmitted = form.formState.isSubmitSuccessful;
@@ -402,12 +452,54 @@ const InternshipApplyPage = () => {
                     )}
                   />
 
+                  {/* Presentation Upload */}
+                  <FormField
+                    control={form.control}
+                    name="presentation"
+                    render={({ field: { onChange, value, ref, ...rest } }) => (
+                      <FormItem className="space-y-3">
+                        <FormLabel>Presentation About Yourself (Optional)</FormLabel>
+                        <FormControl>
+                          <div className="flex flex-col gap-3">
+                            <Label
+                              htmlFor="presentation-upload"
+                              className="inline-flex items-center gap-2 px-4 py-3 rounded-lg border border-dashed border-border bg-background hover:bg-accent/5 cursor-pointer transition-colors"
+                            >
+                              <FileText className="w-5 h-5 text-accent" />
+                              <span className="text-sm text-foreground">
+                                {value && value.length === 1 ? value[0].name : "Choose a file"}
+                              </span>
+                            </Label>
+                            <Input
+                              id="presentation-upload"
+                              type="file"
+                              accept=".pdf,.doc,.docx,.ppt,.pptx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                              ref={ref}
+                              onChange={(e) => onChange(e.target.files)}
+                              {...rest}
+                              className="hidden"
+                            />
+                            <p className="text-xs text-muted-foreground">Upload 1 supported file (PDF, DOC, PPT). Max 10 MB.</p>
+                          </div>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {submitError && (
+                    <div className="p-3 rounded-md bg-destructive/10 text-destructive text-sm font-medium">
+                      {submitError}
+                    </div>
+                  )}
+
                   <Button
                     type="submit"
+                    disabled={isSubmitting}
                     className="w-full rounded-full bg-accent text-accent-foreground font-semibold text-base hover:bg-amber-hover transition-all glow-amber h-12"
                   >
-                    Submit Application
-                    <ArrowRight className="w-4 h-4 ml-2" />
+                    {isSubmitting ? "Submitting Application..." : "Submit Application"}
+                    {!isSubmitting && <ArrowRight className="w-4 h-4 ml-2" />}
                   </Button>
                 </form>
               </Form>
