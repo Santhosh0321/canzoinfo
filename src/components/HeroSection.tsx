@@ -202,7 +202,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ 
                 opacity: 1, 
-                y: showVideo ? 150 : 0 
+                y: showVideo ? "32vh" : "0vh" 
               }}
               transition={{ 
                 y: { type: "spring", stiffness: 70, damping: 14 },
