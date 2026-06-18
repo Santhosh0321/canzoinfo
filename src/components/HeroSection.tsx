@@ -177,13 +177,22 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: showLogo ? 1 : 0, y: showLogo ? 0 : 30 }}
               transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-              className="text-display font-display font-bold tracking-tight mb-1 leading-tight pointer-events-auto text-shadow-glow"
-              style={{ textShadow: showVideo ? "0 4px 12px rgba(0,0,0,0.6)" : "none" }}
+              className="text-display font-display font-bold tracking-tight mb-1 leading-tight pointer-events-auto"
             >
-              <span className={`transition-colors duration-1000 ${showVideo ? "text-slate-300" : "text-slate-800"}`}>
+              <span 
+                className={`transition-colors duration-1000 ${showVideo ? "text-slate-300" : "text-slate-800"}`}
+                style={{ textShadow: showVideo ? "0 4px 12px rgba(0,0,0,0.6)" : "none" }}
+              >
                 Because Time{" "}
               </span>
-              <span className={`transition-colors duration-1000 ${showVideo ? "text-[#fbbf24]" : "text-[#ca8a04]"}`}>
+              <span 
+                className={`transition-colors duration-1000 ${showVideo ? "text-[#fbbf24]" : "text-[#ca8a04]"}`}
+                style={{ 
+                  textShadow: showVideo 
+                    ? "0 4px 12px rgba(0,0,0,0.6), 0 0 20px rgba(251,191,36,0.45)" 
+                    : "0 2px 4px rgba(202,138,4,0.2)"
+                }}
+              >
                 Matters
               </span>
             </motion.h1>
@@ -191,8 +200,14 @@ const HeroSection = () => {
 
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
+              animate={{ 
+                opacity: 1, 
+                y: showVideo ? 150 : 0 
+              }}
+              transition={{ 
+                y: { type: "spring", stiffness: 70, damping: 14 },
+                opacity: { duration: 0.8, delay: 0.3 }
+              }}
               className="flex flex-wrap gap-4 justify-center mt-8 pointer-events-auto"
             >
               <button onClick={() => { window.scrollTo(0,0); navigate('/student'); }} className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-accent text-accent-foreground font-semibold hover:bg-amber-hover transition-colors shadow-lg">
