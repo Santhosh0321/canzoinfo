@@ -62,19 +62,28 @@ const StackCard: React.FC<StackCardProps> = ({ children, zIndex, className = "" 
           const currentDistance = startScrollY - nextRect.top;
           const progress = Math.max(0, Math.min(1, currentDistance / totalDistance));
           
-          // Map progress to scale and brightness (no blur)
+          // Map progress to scale, brightness, 3D tilt, and translateY drop
           const newScale = 1 - (progress * 0.08); // Scales down from 1.0 to 0.92
           const brightness = 1 - (progress * 0.5); // Dims from 1.0 to 0.5 brightness
+          const rotateX = progress * 3.5; // 3D tilt back up to 3.5 degrees
+          const translateY = progress * 12; // Slides downward by 12px
 
-          card.style.transform = `scale(${newScale})`;
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) scale(${newScale}) translateY(${translateY}px)`;
           card.style.filter = `brightness(${brightness})`;
           card.style.transformOrigin = "top center";
           card.style.willChange = "transform, filter";
+
+          // Idea 2: Dynamic Amber Top Border & Glow Shadow
+          // Brand Amber is HSL 39 86% 63% -> RGB (245, 158, 11)
+          card.style.borderTopColor = `rgba(245, 158, 11, ${progress * 0.6})`;
+          card.style.boxShadow = `0 -12px 32px -12px rgba(0, 0, 0, 0.4), 0 -4px 16px -2px rgba(245, 158, 11, ${progress * 0.3})`;
         } else {
           card.style.transform = "";
           card.style.filter = "";
           card.style.transformOrigin = "";
           card.style.willChange = "";
+          card.style.borderTopColor = "";
+          card.style.boxShadow = "";
         }
       }
     };

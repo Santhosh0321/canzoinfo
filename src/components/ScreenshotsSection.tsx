@@ -98,7 +98,7 @@ const ScreenshotsSection = () => {
                 <img
                   src={s.src}
                   alt={s.label}
-                  className="w-full h-full object-cover"
+                  className="w-full h-auto block"
                   loading="lazy"
                   draggable={false}
                 />
@@ -135,7 +135,6 @@ const ScreenshotsSection = () => {
 
         .coverflow-card {
           width: 100%;
-          aspect-ratio: 9 / 18;
           border-radius: 2rem;
           overflow: hidden;
           background: hsl(var(--card));
