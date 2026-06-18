@@ -57,12 +57,8 @@ const formSchema = z.object({
   hasLaptop: z.enum(["Yes", "No"], {
     required_error: "Please select an option",
   }),
-  resume: z
-    .instanceof(FileList)
-    .refine((files) => files.length === 1, "Resume is required")
-    .refine((files) => files[0]?.size <= MAX_FILE_SIZE, "File must be under 10 MB")
-    .refine((files) => ACCEPTED_FILE_TYPES.includes(files[0]?.type), "Only PDF or DOC files are allowed"),
-  presentation: z.any().optional(),
+  resume: z.string().url("Please enter a valid URL").min(1, "Resume link is required"),
+  presentation: z.string().url("Please enter a valid URL").optional().or(z.literal("")),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -88,8 +84,8 @@ const InternshipApplyPage = () => {
       otherInterest: "",
       skillLevel: undefined,
       hasLaptop: undefined,
-      resume: undefined,
-      presentation: undefined,
+      resume: "",
+      presentation: "",
     },
   });
 
@@ -117,11 +113,11 @@ const InternshipApplyPage = () => {
     formData.append("Skill Level", values.skillLevel);
     formData.append("Has Laptop", values.hasLaptop);
 
-    if (values.resume && values.resume[0]) {
-      formData.append("Resume", values.resume[0]);
+    if (values.resume) {
+      formData.append("Resume Link", values.resume);
     }
-    if (values.presentation && values.presentation[0]) {
-      formData.append("Presentation", values.presentation[0]);
+    if (values.presentation) {
+      formData.append("Presentation Link", values.presentation);
     }
 
     try {
@@ -418,71 +414,33 @@ const InternshipApplyPage = () => {
                     )}
                   />
 
-                  {/* Resume Upload */}
+                  {/* Resume Link */}
                   <FormField
                     control={form.control}
                     name="resume"
-                    render={({ field: { onChange, value, ref, ...rest } }) => (
+                    render={({ field }) => (
                       <FormItem className="space-y-3">
-                        <FormLabel>Upload your Resume (PDF / DOC format) <span className="text-destructive">*</span></FormLabel>
+                        <FormLabel>Resume Link (Google Drive, Dropbox, etc.) <span className="text-destructive">*</span></FormLabel>
                         <FormControl>
-                          <div className="flex flex-col gap-3">
-                            <Label
-                              htmlFor="resume-upload"
-                              className="inline-flex items-center gap-2 px-4 py-3 rounded-lg border border-dashed border-border bg-background hover:bg-accent/5 cursor-pointer transition-colors"
-                            >
-                              <FileText className="w-5 h-5 text-accent" />
-                              <span className="text-sm text-foreground">
-                                {value && value.length === 1 ? value[0].name : "Choose a file"}
-                              </span>
-                            </Label>
-                            <Input
-                              id="resume-upload"
-                              type="file"
-                              accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                              ref={ref}
-                              onChange={(e) => onChange(e.target.files)}
-                              {...rest}
-                              className="hidden"
-                            />
-                            <p className="text-xs text-muted-foreground">Upload 1 supported file. Max 10 MB.</p>
-                          </div>
+                          <Input type="url" placeholder="https://drive.google.com/..." {...field} />
                         </FormControl>
+                        <p className="text-xs text-muted-foreground">Please provide a public link to your resume.</p>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
 
-                  {/* Presentation Upload */}
+                  {/* Presentation Link */}
                   <FormField
                     control={form.control}
                     name="presentation"
-                    render={({ field: { onChange, value, ref, ...rest } }) => (
+                    render={({ field }) => (
                       <FormItem className="space-y-3">
-                        <FormLabel>Presentation About Yourself (Optional)</FormLabel>
+                        <FormLabel>Presentation About Yourself Link (Optional)</FormLabel>
                         <FormControl>
-                          <div className="flex flex-col gap-3">
-                            <Label
-                              htmlFor="presentation-upload"
-                              className="inline-flex items-center gap-2 px-4 py-3 rounded-lg border border-dashed border-border bg-background hover:bg-accent/5 cursor-pointer transition-colors"
-                            >
-                              <FileText className="w-5 h-5 text-accent" />
-                              <span className="text-sm text-foreground">
-                                {value && value.length === 1 ? value[0].name : "Choose a file"}
-                              </span>
-                            </Label>
-                            <Input
-                              id="presentation-upload"
-                              type="file"
-                              accept=".pdf,.doc,.docx,.ppt,.pptx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
-                              ref={ref}
-                              onChange={(e) => onChange(e.target.files)}
-                              {...rest}
-                              className="hidden"
-                            />
-                            <p className="text-xs text-muted-foreground">Upload 1 supported file (PDF, DOC, PPT). Max 10 MB.</p>
-                          </div>
+                          <Input type="url" placeholder="https://drive.google.com/..." {...field} />
                         </FormControl>
+                        <p className="text-xs text-muted-foreground">Please provide a public link to your presentation (Google Slides, Canva, etc.).</p>
                         <FormMessage />
                       </FormItem>
                     )}

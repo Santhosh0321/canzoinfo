@@ -52,9 +52,7 @@ const formSchema = z.object({
   city: z.string().min(2, "City is required").max(100),
   outletCount: z.string().min(1, "Please select number of outlets"),
   dailyOrders: z.string().min(1, "Please select daily order volume"),
-  presentation: z
-    .any()
-    .optional(),
+  presentation: z.string().url("Please enter a valid URL").optional().or(z.literal("")),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -81,7 +79,7 @@ const CanteenPartnerPage = () => {
       city: "",
       outletCount: "",
       dailyOrders: "",
-      presentation: undefined,
+      presentation: "",
     },
   });
 
@@ -104,8 +102,8 @@ const CanteenPartnerPage = () => {
     formData.append("Number of Outlets", values.outletCount);
     formData.append("Daily Order Volume", values.dailyOrders);
 
-    if (values.presentation && values.presentation[0]) {
-      formData.append("Presentation", values.presentation[0]);
+    if (values.presentation) {
+      formData.append("Presentation Link", values.presentation);
     }
 
     try {
@@ -371,36 +369,17 @@ const CanteenPartnerPage = () => {
                       </div>
                     </div>
 
-                    {/* Presentation Upload */}
+                    {/* Presentation Link */}
                     <FormField
                       control={form.control}
                       name="presentation"
-                      render={({ field: { onChange, value, ref, ...rest } }) => (
+                      render={({ field }) => (
                         <FormItem className="space-y-3">
-                          <FormLabel>Presentation About Yourself (Optional)</FormLabel>
+                          <FormLabel>Presentation About Yourself Link (Optional)</FormLabel>
                           <FormControl>
-                            <div className="flex flex-col gap-3">
-                              <Label
-                                htmlFor="partner-presentation-upload"
-                                className="inline-flex items-center gap-2 px-4 py-3 rounded-lg border border-dashed border-border bg-background hover:bg-accent/5 cursor-pointer transition-colors"
-                              >
-                                <FileText className="w-5 h-5 text-accent" />
-                                <span className="text-sm text-foreground">
-                                  {value && value.length === 1 ? value[0].name : "Choose a file"}
-                                </span>
-                              </Label>
-                              <Input
-                                id="partner-presentation-upload"
-                                type="file"
-                                accept=".pdf,.doc,.docx,.ppt,.pptx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
-                                ref={ref}
-                                onChange={(e) => onChange(e.target.files)}
-                                {...rest}
-                                className="hidden"
-                              />
-                              <p className="text-xs text-muted-foreground">Upload 1 supported file (PDF, DOC, PPT). Max 10 MB.</p>
-                            </div>
+                            <Input type="url" placeholder="https://drive.google.com/..." {...field} />
                           </FormControl>
+                          <p className="text-xs text-muted-foreground">Please provide a public link to your presentation (Google Slides, Canva, etc.).</p>
                           <FormMessage />
                         </FormItem>
                       )}
