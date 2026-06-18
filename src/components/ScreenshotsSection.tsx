@@ -7,7 +7,7 @@ import "swiper/css";
 import "swiper/css/effect-coverflow";
 import web4 from "@/assets/work/web4.png";
 import web5 from "@/assets/work/web5.png";
-import web6 from "@/assets/work/letter.png";
+import web6 from "@/assets/work/web6.jpeg";
 
 // Initial state must render as: Left = Canteens, Center = Sign In, Right = Cart.
 const screenshots = [
@@ -98,11 +98,9 @@ const ScreenshotsSection = () => {
                 <img
                   src={s.src}
                   alt={s.label}
-                  className="w-full h-auto block"
-                  loading="eager"
-                  decoding="sync"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
                   draggable={false}
-                  style={{ imageRendering: "auto", WebkitFontSmoothing: "antialiased" }}
                 />
               </div>
               <p className="mt-5 text-center text-sm font-medium text-muted-foreground">
@@ -137,18 +135,16 @@ const ScreenshotsSection = () => {
 
         .coverflow-card {
           width: 100%;
+          aspect-ratio: 9 / 18;
           border-radius: 2rem;
           overflow: hidden;
           background: hsl(var(--card));
           border: 1px solid hsl(var(--border));
           box-shadow: 0 10px 30px -10px rgba(0,0,0,0.25);
-          transform: translateZ(0);
+          transform: scale(0.9);
           transform-origin: center center;
           transition: transform 1100ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 1100ms cubic-bezier(0.22, 1, 0.36, 1);
           will-change: transform;
-          backface-visibility: hidden;
-          -webkit-backface-visibility: hidden;
-          image-rendering: -webkit-optimize-contrast;
         }
         @media (min-width: 1024px) {
           .coverflow-slide {
@@ -189,7 +185,7 @@ const ScreenshotsSection = () => {
           filter: none;
         }
         .canzo-coverflow .swiper-slide-active .coverflow-card {
-          transform: scale(1.12) translateZ(0);
+          transform: scale(1.15);
           box-shadow: 0 30px 60px -20px rgba(0,0,0,0.45), 0 0 0 1px hsl(var(--border));
         }
       `}</style>

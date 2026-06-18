@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import appScreen from "@/assets/work/web6.jpeg";
-import appScreen2 from "@/assets/work/web5.jpeg";
+import appScreen2 from "@/assets/work/web5.png";
 
 const PLAY_URL = "https://play.google.com/store/apps/details?id=canzo.in";
 const QR_URL = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=0&data=${encodeURIComponent(
