@@ -9,7 +9,6 @@ import cardCanteen from "@/assets/card-canteen.jpg";
 import cardInternship from "@/assets/card-internship.jpg";
 
 import StackCard from "./StackCard";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 const ctaAnim = {
   initial: { opacity: 0, scale: 0.9 },
@@ -53,7 +52,6 @@ type Phase = "intro" | "playing" | "outro";
 const HeroSection = () => {
   const navigate = useNavigate();
   const ref = useRef(null);
-  const isMobile = useIsMobile();
   
   const [time, setTime] = useState(new Date());
   const [phase, setPhase] = useState<Phase>("intro");
@@ -146,7 +144,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: showLogo ? 1 : 0, y: showLogo ? 0 : 30 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="relative h-32 md:h-44 lg:h-52 mb-3 aspect-[1778/634] pointer-events-auto"
+              className="relative h-28 md:h-44 mb-3 aspect-[1778/634] pointer-events-auto"
             >
               <img 
                 src={canzoLogo} 
@@ -179,20 +177,26 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: showLogo ? 1 : 0, y: showLogo ? 0 : 30 }}
               transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-              className="text-display font-display font-bold tracking-tight mb-1 leading-tight pointer-events-auto"
+              className="text-display font-display font-bold tracking-tight mb-2 leading-tight pointer-events-auto"
             >
               <span 
-                className={`transition-colors duration-1000 ${showVideo ? "text-slate-300" : "text-slate-800"}`}
+                className={`transition-colors duration-1000 ${showVideo ? "text-slate-200" : "text-[#1e293b]"}`}
                 style={{ textShadow: showVideo ? "0 4px 12px rgba(0,0,0,0.6)" : "none" }}
               >
                 Because Time{" "}
               </span>
               <span 
-                className={`transition-colors duration-1000 ${showVideo ? "text-[#fbbf24]" : "text-[#ca8a04]"}`}
+                className={`bg-clip-text text-transparent bg-gradient-to-r transition-all duration-1000 ${
+                  showVideo 
+                    ? "from-slate-200 to-[#fbbf24]" 
+                    : "from-[#1e293b] to-[#ca8a04]"
+                }`}
                 style={{ 
                   textShadow: showVideo 
-                    ? "0 4px 12px rgba(0,0,0,0.6), 0 0 20px rgba(251,191,36,0.45)" 
-                    : "0 2px 4px rgba(202,138,4,0.2)"
+                    ? "0 4px 12px rgba(0,0,0,0.6), 0 0 20px rgba(251,191,36,0.3)" 
+                    : "none",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent"
                 }}
               >
                 Matters
@@ -204,7 +208,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ 
                 opacity: 1, 
-                y: showVideo ? (isMobile ? "32vh" : "15vh") : "0vh" 
+                y: showVideo ? "17vh" : "0vh" 
               }}
               transition={{ 
                 y: { type: "spring", stiffness: 70, damping: 14 },
