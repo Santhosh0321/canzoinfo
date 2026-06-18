@@ -90,32 +90,29 @@ const CareersApplyPage = () => {
     setIsSubmitting(true);
     setSubmitError("");
 
-    const formData = new FormData();
-    // FormSubmit.co special fields
-    formData.append("_subject", `New Career Application: ${values.role} - ${values.name}`);
-    formData.append("_captcha", "false");
-    formData.append("_template", "table");
-
-    formData.append("Name", values.name);
-    formData.append("Phone", values.phone);
-    formData.append("Email", values.email);
-    formData.append("Role", values.role);
-    formData.append("Experience", values.experience);
-    if (values.portfolio) formData.append("Portfolio", values.portfolio);
-
-    if (values.resume) {
-      formData.append("Resume Link", values.resume);
-    }
-    if (values.presentation) {
-      formData.append("Presentation Link", values.presentation);
-    }
+    const payload = {
+      _subject: `New Career Application: ${values.role} - ${values.name}`,
+      _captcha: "false",
+      _template: "table",
+      Name: values.name,
+      Phone: values.phone,
+      email: values.email, // lowercase email for FormSubmit Reply-To
+      Role: values.role,
+      Experience: values.experience,
+      ...(values.portfolio ? { Portfolio: values.portfolio } : {}),
+      ...(values.resume ? { "Resume Link": values.resume } : {}),
+      ...(values.presentation ? { "Presentation Link": values.presentation } : {})
+    };
 
     try {
       // FormSubmit requires the /ajax/ endpoint when using fetch/React
       const response = await fetch("https://formsubmit.co/ajax/tamiltamilboss090@gmail.com", {
         method: "POST",
-        headers: { Accept: "application/json" },
-        body: formData,
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(payload),
       });
 
       if (response.ok) {
