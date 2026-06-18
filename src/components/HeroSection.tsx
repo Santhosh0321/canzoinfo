@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import canzoLogo from "@/assets/logohero.png";
-import heroVideo from "@/assets/hero7.mp4";
+import heroVideo from "@/assets/hero9.mp4";
 import cardStudents from "@/assets/card-students.jpg";
 import cardCanteen from "@/assets/card-canteen.jpg";
 import cardInternship from "@/assets/card-internship.jpg";
@@ -48,6 +48,13 @@ const HeroSection = () => {
   const ref = useRef(null);
   
   const [time, setTime] = useState(new Date());
+  const [showLogo, setShowLogo] = useState(false);
+
+  const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement>) => {
+    const videoTime = e.currentTarget.currentTime;
+    // First 10 seconds hide, 10-17 seconds show, after 17 seconds hide.
+    setShowLogo(videoTime >= 10 && videoTime < 17);
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -88,17 +95,18 @@ const HeroSection = () => {
               loop 
               muted 
               playsInline
+              onTimeUpdate={handleTimeUpdate}
               className="w-full h-full object-cover opacity-70"
             />
           </motion.div>
 
           {/* Hero Content */}
-          <motion.div style={{ opacity: contentOpacity, scale: contentScale, filter: blur }} className="absolute bottom-28 left-0 right-0 z-10 container mx-auto flex flex-col items-center text-center px-4">
+          <motion.div style={{ opacity: contentOpacity, scale: contentScale, filter: blur }} className="absolute bottom-28 left-0 right-0 z-10 container mx-auto flex flex-col items-center text-center px-4 pointer-events-none">
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
+              animate={{ opacity: showLogo ? 1 : 0, y: showLogo ? 0 : 30 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="relative h-24 md:h-32 mb-1 aspect-[1778/634]"
+              className="relative h-24 md:h-32 mb-1 aspect-[1778/634] pointer-events-auto"
             >
               <img 
                 src={canzoLogo} 
@@ -129,9 +137,9 @@ const HeroSection = () => {
             </motion.div>
             <motion.h1 
               initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
+              animate={{ opacity: showLogo ? 1 : 0, y: showLogo ? 0 : 30 }}
               transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-              className="text-display font-display font-bold text-white tracking-tight mb-1 drop-shadow-lg leading-tight"
+              className="text-display font-display font-bold text-white tracking-tight mb-1 drop-shadow-lg leading-tight pointer-events-auto"
               style={{ textShadow: "0 4px 12px rgba(0,0,0,0.6)" }}
             >
               Because Time Matters
@@ -142,7 +150,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
-              className="flex flex-wrap gap-4 justify-center mt-8"
+              className="flex flex-wrap gap-4 justify-center mt-8 pointer-events-auto"
             >
               <button onClick={() => { window.scrollTo(0,0); navigate('/student'); }} className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-accent text-accent-foreground font-semibold hover:bg-amber-hover transition-colors shadow-lg">
                 Order Now <ArrowRight className="w-5 h-5" />

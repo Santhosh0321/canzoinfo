@@ -17,14 +17,13 @@ const fadeUp = {
 };
 
 const timelineEvents = [
-  { date: "2018 APRIL", title: "Company Incorporated" },
-  { date: "2019 JUNE", title: "App Beta Version Launched" },
-  { date: "2020 JUNE", title: "App 2.0 Launched" },
-  { date: "2021 JUNE", title: "1000+ Affiliators Registered" },
-  { date: "2022 JUNE", title: "50+ Talents On-boarded" },
-  { date: "2022 DECEMBER", title: "5000+ Businesses enrolled and Digitized" },
-  { date: "2023 JANUARY", title: "1500+ Affiliators Registered" },
-  { date: "2024 MARCH", title: "₹1 Cr+ Paid to Users" },
+  { date: "2022", title: "The Beginning of Canzo" },
+  { date: "2023", title: "Building the Foundation" },
+  { date: "2025", title: "Launching the Vision" },
+  { date: "January 2026", title: "First Onboarding" },
+  { date: "February 2026", title: "600+ Users Strong" },
+  { date: "2026", title: "Expanding Business Horizons" },
+  { date: "Future", title: "Driving Innovation Forward" },
 ];
 
 const AboutUsPage = () => {
