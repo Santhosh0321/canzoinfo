@@ -223,9 +223,7 @@ const HeroSection = () => {
               }}
               className="absolute left-0 right-0 flex flex-wrap gap-4 justify-center pointer-events-auto px-4"
             >
-              <button onClick={() => { window.scrollTo(0,0); navigate('/student'); }} className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-accent text-accent-foreground font-semibold hover:bg-amber-hover transition-colors shadow-lg">
-                Order Now <ArrowRight className="w-5 h-5" />
-              </button>
+              <button onClick={() => { window.open('https://canzo.in', '_blank'); }} className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-accent text-accent-foreground font-semibold hover:bg-amber-hover transition-colors shadow-lg">Order Now <ArrowRight className="w-5 h-5" /></button>
               <button 
                 onClick={() => { window.scrollTo(0,0); navigate('/colleges-canteens'); }} 
                 className={`inline-flex items-center gap-2 px-8 py-4 rounded-full backdrop-blur-md border font-semibold transition-all duration-1000 shadow-lg ${
