@@ -89,13 +89,11 @@ const CanteenPartnerPage = () => {
 
     const formData = new FormData();
     // FormSubmit.co special fields
-    formData.append("_subject", `New Canteen Partner Application: ${values.canteenName} - ${values.ownerName}`);
+    formData.append("_subject", `New Partner Application: ${values.canteenName} - ${values.ownerName}`);
     formData.append("_captcha", "false");
     formData.append("_template", "table");
-    // _replyto tells FormSubmit which email to route replies to — required for reliable delivery
-    formData.append("_replyto", values.email);
 
-    formData.append("Owner / Manager Name", values.ownerName);
+    formData.append("Name", values.ownerName);
     formData.append("Email", values.email);
     formData.append("Canteen Name", values.canteenName);
     formData.append("Phone", values.phone);
@@ -103,29 +101,28 @@ const CanteenPartnerPage = () => {
     formData.append("City", values.city);
     formData.append("Number of Outlets", values.outletCount);
     formData.append("Daily Order Volume", values.dailyOrders);
-    formData.append("Form Type", "Canteen Partner Application");
 
     if (values.presentation) {
       formData.append("Presentation Link", values.presentation);
     }
 
     try {
+      // FormSubmit requires the /ajax/ endpoint when using fetch/React
       const response = await fetch("https://formsubmit.co/ajax/tamiltamilboss090@gmail.com", {
         method: "POST",
         headers: { Accept: "application/json" },
         body: formData,
       });
 
-      const data = await response.json().catch(() => ({ success: "false" }));
-
-      if (!response.ok || data.success === "false") {
-        const msg = data.message || "Submission failed. Please try again.";
-        setSubmitError(msg);
-        throw new Error(msg);
+      if (response.ok) {
+        // Success — react-hook-form's isSubmitSuccessful handles display
+      } else {
+        const data = await response.json().catch(() => ({}));
+        setSubmitError(data.message || "Something went wrong. Please try again.");
+        throw new Error(data.message || "Submission failed");
       }
-      // data.success === "true" — react-hook-form's isSubmitSuccessful handles UI
     } catch (error) {
-      console.error("Error submitting canteen partner application:", error);
+      console.error("Error submitting partner application:", error);
       throw error;
     } finally {
       setIsSubmitting(false);
