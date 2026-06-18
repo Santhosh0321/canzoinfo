@@ -6,7 +6,7 @@ import canzoLogo from "@/assets/logohero.png";
 import heroVideo from "@/assets/hero1.webm";
 import cardStudents from "@/assets/cardstudent.png";
 import cardCanteen from "@/assets/cardcanteen.png";
-import cardInternship from "@/assets/card-internship.jpg";
+import cardInternship from "@/assets/intership.png";
 
 import StackCard from "./StackCard";
 
