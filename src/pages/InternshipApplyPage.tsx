@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -98,29 +98,52 @@ const InternshipApplyPage = () => {
   const isSubmitted = searchParams.get("submitted") === "true";
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
+  const [submitError, setSubmitError] = useState("");
 
-  const onSubmit = (values: FormValues) => {
+  const onSubmit = async (values: FormValues) => {
     setIsSubmitting(true);
-    
-    // Remove old hidden inputs if any to prevent duplicates
-    formRef.current?.querySelectorAll('input[type="hidden"]').forEach(el => el.remove());
+    setSubmitError("");
 
-    const addHiddenField = (name: string, value: string) => {
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = name;
-      input.value = value;
-      formRef.current?.appendChild(input);
-    };
+    const formData = new FormData();
+    formData.append("_subject", `New Internship Application: ${values.name} - ${values.college}`);
+    formData.append("_captcha", "false");
+    formData.append("_template", "table");
+    formData.append("_next", window.location.href.split("?")[0] + "?submitted=true");
 
-    addHiddenField("_subject", `New Internship Application: ${values.name} - ${values.college}`);
-    addHiddenField("_captcha", "false");
-    addHiddenField("_template", "table");
-    addHiddenField("_next", window.location.href.split("?")[0] + "?submitted=true");
+    formData.append("Name", values.name);
+    formData.append("Phone", values.phone);
+    formData.append("Email", values.email);
+    formData.append("College", values.college);
+    formData.append("Department", values.department);
+    formData.append("Year of Study", values.yearOfStudy);
+    formData.append("Interests", values.interests.join(", "));
+    if (values.otherInterest) formData.append("Other Interest", values.otherInterest);
+    formData.append("Skill Level", values.skillLevel);
+    formData.append("Has Laptop", values.hasLaptop);
 
-    // Submit the form natively so FormSubmit can show its activation page if needed
-    formRef.current?.submit();
+    if (values.resume && values.resume[0]) {
+      formData.append("Resume", values.resume[0]);
+    }
+    if (values.presentation && values.presentation[0]) {
+      formData.append("Presentation", values.presentation[0]);
+    }
+
+    try {
+      const response = await fetch("https://formsubmit.co/tamiltamilboss090@gmail.com", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok || response.redirected) {
+        window.location.href = window.location.href.split("?")[0] + "?submitted=true";
+      } else {
+        setSubmitError("Something went wrong. Please try again.");
+      }
+    } catch {
+      setSubmitError("Network error. Please check your connection and try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
 
@@ -176,14 +199,7 @@ const InternshipApplyPage = () => {
           ) : (
             <motion.div {...fadeUp} className="p-6 sm:p-10 rounded-2xl bg-card border border-border shadow-sm">
               <Form {...form}>
-                <form 
-                  ref={formRef}
-                  action="https://formsubmit.co/tamiltamilboss090@gmail.com"
-                  method="POST"
-                  encType="multipart/form-data"
-                  onSubmit={form.handleSubmit(onSubmit)} 
-                  className="space-y-8"
-                >
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                   {/* Personal Details */}
                   <div className="space-y-5">
                     <h2 className="text-lg font-display font-semibold text-foreground">Personal Details</h2>
@@ -469,6 +485,12 @@ const InternshipApplyPage = () => {
                       </FormItem>
                     )}
                   />
+
+                  {submitError && (
+                    <div className="p-3 rounded-md bg-destructive/10 text-destructive text-sm font-medium">
+                      {submitError}
+                    </div>
+                  )}
 
                   <Button
                     type="submit"
