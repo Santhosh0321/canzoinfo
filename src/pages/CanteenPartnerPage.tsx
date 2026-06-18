@@ -67,6 +67,7 @@ const fadeUp = {
 const CanteenPartnerPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [isSubmitSuccess, setIsSubmitSuccess] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -86,6 +87,7 @@ const CanteenPartnerPage = () => {
   const onSubmit = async (values: FormValues) => {
     setIsSubmitting(true);
     setSubmitError("");
+    setIsSubmitSuccess(false);
 
     const payload = {
       _subject: `New Partner Application: ${values.canteenName} - ${values.ownerName}`,
@@ -114,7 +116,7 @@ const CanteenPartnerPage = () => {
       });
 
       if (response.ok) {
-        // Success — react-hook-form's isSubmitSuccessful handles display
+        setIsSubmitSuccess(true);
       } else {
         const data = await response.json().catch(() => ({}));
         setSubmitError(data.message || "Something went wrong. Please try again.");
@@ -122,13 +124,13 @@ const CanteenPartnerPage = () => {
       }
     } catch (error) {
       console.error("Error submitting partner application:", error);
-      throw error;
+      // Ensure we don't throw an unhandled promise rejection that might break React
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const isSubmitted = form.formState.isSubmitSuccessful;
+  const isSubmitted = isSubmitSuccess || form.formState.isSubmitSuccessful;
 
   return (
     <div className="min-h-screen">
@@ -325,7 +327,7 @@ const CanteenPartnerPage = () => {
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Number of Outlets <span className="text-destructive">*</span></FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
                                 <FormControl>
                                   <SelectTrigger>
                                     <SelectValue placeholder="Select number of outlets" />
@@ -348,7 +350,7 @@ const CanteenPartnerPage = () => {
                           render={({ field }) => (
                             <FormItem>
                               <FormLabel>Approx. Daily Orders <span className="text-destructive">*</span></FormLabel>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value}>
                                 <FormControl>
                                   <SelectTrigger>
                                     <SelectValue placeholder="Select daily volume" />
