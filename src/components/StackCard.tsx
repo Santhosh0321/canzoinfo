@@ -55,15 +55,15 @@ const StackCard: React.FC<StackCardProps> = ({ children, zIndex, className = "" 
       if (nextCard) {
         const nextRect = nextCard.getBoundingClientRect();
         const windowHeight = window.innerHeight;
-        // Start the effect when the bottom of the section comes up to 45% of the viewport (nextRect.top is the top of the next card)
-        const threshold = windowHeight * 0.45;
+        // Start the effect when the bottom of the section comes up to 50% of the viewport (nextRect.top is the top of the next card)
+        const threshold = windowHeight * 0.5;
 
         if (nextRect.top < threshold) {
           // Calculate progress from 1 (at threshold) to 0 (at 0 or below)
           const progress = Math.max(0, Math.min(1, nextRect.top / threshold));
           
           // Map progress to scale, brightness, and blur
-          const newScale = 0.93 + (progress * 0.07); // Scales down to 0.93
+          const newScale = 0.92 + (progress * 0.08); // Scales down to 0.92
           const brightness = 0.5 + (progress * 0.5); // Dims to 50% brightness
           const blur = (1 - progress) * 3; // Blurs up to 3px
 
