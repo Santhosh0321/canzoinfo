@@ -208,14 +208,14 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: "-15vh" }}
               animate={{ 
                 opacity: 1, 
-                y: showVideo ? "0vh" : "-10vh" 
+                y: showVideo ? "0vh" : "-8vh" 
               }}
               transition={{ 
                 y: { type: "spring", stiffness: 70, damping: 14 },
                 opacity: { duration: 0.8, delay: 0.3 }
               }}
               className="absolute left-0 right-0 flex flex-wrap gap-4 justify-center pointer-events-auto px-4"
-              style={{ bottom: "clamp(30px, 8vh, 60px)" }}
+              style={{ bottom: "clamp(60px, 15vh, 100px)" }}
             >
               <button onClick={() => { window.scrollTo(0,0); navigate('/student'); }} className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-accent text-accent-foreground font-semibold hover:bg-amber-hover transition-colors shadow-lg">
                 Order Now <ArrowRight className="w-5 h-5" />
