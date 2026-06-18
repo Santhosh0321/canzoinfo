@@ -1,11 +1,10 @@
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, CheckCircle2, FileText } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -82,7 +81,6 @@ const CareersApplyPage = () => {
     },
   });
 
-  const [searchParams] = useSearchParams();
   const isSubmitted = searchParams.get("submitted") === "true";
 
   const [isSubmitting, setIsSubmitting] = useState(false);
