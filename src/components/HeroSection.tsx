@@ -139,7 +139,7 @@ const HeroSection = () => {
           </motion.div>
 
           {/* Hero Content */}
-          <motion.div style={{ opacity: contentOpacity, scale: contentScale, filter: blur }} className="absolute inset-y-0 left-0 right-0 z-10 container mx-auto flex flex-col items-center justify-center text-center px-4 pointer-events-none">
+          <motion.div style={{ opacity: contentOpacity, scale: contentScale, filter: blur }} className="absolute inset-y-0 left-0 right-0 z-10 container mx-auto flex flex-col items-center pt-[20vh] md:pt-[25vh] text-center px-4 pointer-events-none">
             <motion.div 
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: showLogo ? 1 : 0, y: showLogo ? 0 : 30 }}
