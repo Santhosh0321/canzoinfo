@@ -94,13 +94,13 @@ const CanteenPartnerPage = () => {
     formData.append("_template", "table");
 
     formData.append("Name", values.ownerName);
-    formData.append("Email", values.email);
-    formData.append("Canteen Name", values.canteenName);
     formData.append("Phone", values.phone);
-    formData.append("College / Institution", values.collegeName);
+    formData.append("Email", values.email);
+    formData.append("Canteen", values.canteenName);
+    formData.append("College", values.collegeName);
     formData.append("City", values.city);
-    formData.append("Number of Outlets", values.outletCount);
-    formData.append("Daily Order Volume", values.dailyOrders);
+    formData.append("Outlets", values.outletCount);
+    formData.append("Daily Orders", values.dailyOrders);
 
     if (values.presentation) {
       formData.append("Presentation Link", values.presentation);
