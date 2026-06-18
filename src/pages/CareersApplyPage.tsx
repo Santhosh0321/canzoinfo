@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, CheckCircle2, FileText } from "lucide-react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -81,14 +82,17 @@ const CareersApplyPage = () => {
     },
   });
 
+  const [searchParams] = useSearchParams();
+  const isSubmitted = searchParams.get("submitted") === "true";
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+
   useEffect(() => {
     if (roleParam) {
       form.setValue("role", roleParam);
     }
   }, [roleParam, form]);
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState("");
 
   const onSubmit = async (values: FormValues) => {
     setIsSubmitting(true);
@@ -99,6 +103,8 @@ const CareersApplyPage = () => {
     formData.append("_subject", `New Career Application: ${values.role} - ${values.name}`);
     formData.append("_captcha", "false");
     formData.append("_template", "table");
+    // Redirect back to this page with ?submitted=true after FormSubmit processes
+    formData.append("_next", window.location.href.split("?")[0] + "?submitted=true");
 
     formData.append("Name", values.name);
     formData.append("Phone", values.phone);
@@ -115,28 +121,24 @@ const CareersApplyPage = () => {
     }
 
     try {
+      // Standard submission (no Accept: application/json) — required for file attachments
       const response = await fetch("https://formsubmit.co/tamiltamilboss090@gmail.com", {
         method: "POST",
-        headers: { Accept: "application/json" },
         body: formData,
       });
 
-      if (response.ok) {
-        // Success handled by react-hook-form's isSubmitSuccessful
+      if (response.ok || response.redirected) {
+        // Redirect to success URL
+        window.location.href = window.location.href.split("?")[0] + "?submitted=true";
       } else {
-        const data = await response.json().catch(() => ({}));
-        setSubmitError(data.message || "Something went wrong. Please try again.");
-        throw new Error(data.message || "Submission failed");
+        setSubmitError("Something went wrong. Please try again.");
       }
-    } catch (error) {
-      console.error("Error submitting application:", error);
-      throw error;
+    } catch {
+      setSubmitError("Network error. Please check your connection and try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
-
-  const isSubmitted = form.formState.isSubmitSuccessful;
 
   return (
     <div className="min-h-screen flex flex-col">
