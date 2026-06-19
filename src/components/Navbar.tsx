@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import canzoLogo from "@/assets/canzo-logo.png";
+import canzoLogo from "@/assets/logo4.png";
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Menu, X } from "lucide-react";
@@ -42,6 +42,7 @@ const navLinks = [
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [showGetStarted, setShowGetStarted] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
   const navElRef = useRef<HTMLElement | null>(null);
@@ -73,6 +74,15 @@ const Navbar = () => {
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setShowGetStarted(window.innerWidth >= 342);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -134,14 +144,16 @@ const Navbar = () => {
           ))}
         </div>
         <div className="flex items-center gap-3">
-          <a
-            href="https://canzo.in"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-5 py-2 rounded-full bg-accent text-accent-foreground font-semibold text-sm hover:bg-amber-hover transition-colors"
-          >
-            Get Started
-          </a>
+          {showGetStarted && (
+            <a
+              href="https://canzo.in"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-2 rounded-full bg-accent text-accent-foreground font-semibold text-sm hover:bg-amber-hover transition-colors"
+            >
+              Get Started
+            </a>
+          )}
           <button
             className="lg:hidden p-2 text-foreground"
             onClick={() => setMobileOpen(!mobileOpen)}

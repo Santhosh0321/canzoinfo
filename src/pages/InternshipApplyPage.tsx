@@ -176,9 +176,9 @@ const InternshipApplyPage = () => {
               className="p-8 sm:p-12 rounded-2xl bg-accent/10 border border-accent/20 text-center"
             >
               <CheckCircle2 className="w-14 h-14 text-accent mx-auto mb-4" />
-              <h2 className="text-2xl font-display font-bold mb-2">Application Received!</h2>
+              <h2 className="text-2xl font-display font-bold mb-2">Thank you, {form.getValues("name")}!</h2>
               <p className="text-muted-foreground mb-6">
-                Thank you for applying. We will review your details and reach out via email or phone soon.
+                Your application has been received successfully. We appreciate your interest in joining CANZO! Our team will review your skills and get in touch with you shortly. Keep up the great energy!
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <Link to="/internship">

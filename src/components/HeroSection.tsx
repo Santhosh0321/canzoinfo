@@ -208,33 +208,49 @@ const HeroSection = () => {
                   Matters
                 </span>
               </motion.h1>
+
+              {/* In-flow Buttons when video is ended: ensures they never overlay tagline text on any screen size */}
+              {!showVideo && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                  className="flex flex-nowrap gap-2 sm:gap-4 justify-center pointer-events-auto px-4 mt-6 sm:mt-8"
+                >
+                  <button onClick={() => { window.open('https://canzo.in', '_blank'); }} className="inline-flex items-center gap-1.5 sm:gap-2 px-5 py-3 sm:px-8 sm:py-4 rounded-full bg-accent text-accent-foreground font-semibold hover:bg-amber-hover transition-colors shadow-lg text-sm sm:text-base whitespace-nowrap">
+                    Order Now <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </button>
+                  <button 
+                    onClick={() => { window.scrollTo(0,0); navigate('/colleges-canteens'); }} 
+                    className="inline-flex items-center gap-1.5 sm:gap-2 px-5 py-3 sm:px-8 sm:py-4 rounded-full backdrop-blur-md border font-semibold transition-all duration-300 shadow-lg bg-black/5 text-black border-black/10 hover:bg-black/15 text-sm sm:text-base whitespace-nowrap"
+                  >
+                    Partner with Us
+                  </button>
+                </motion.div>
+              )}
             </div>
 
-            {/* Buttons */}
-            <motion.div 
-              initial={{ opacity: 0, bottom: "20vh" }}
-              animate={{ 
-                opacity: 1, 
-                bottom: showVideo ? "15vh" : "20vh" 
-              }}
-              transition={{ 
-                bottom: { type: "spring", stiffness: 70, damping: 14 },
-                opacity: { duration: 0.8, delay: 0.3 }
-              }}
-              className="absolute left-0 right-0 flex flex-wrap gap-4 justify-center pointer-events-auto px-4"
-            >
-              <button onClick={() => { window.open('https://canzo.in', '_blank'); }} className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-accent text-accent-foreground font-semibold hover:bg-amber-hover transition-colors shadow-lg">Order Now <ArrowRight className="w-5 h-5" /></button>
-              <button 
-                onClick={() => { window.scrollTo(0,0); navigate('/colleges-canteens'); }} 
-                className={`inline-flex items-center gap-2 px-8 py-4 rounded-full backdrop-blur-md border font-semibold transition-all duration-1000 shadow-lg ${
-                  showVideo 
-                    ? "bg-white/10 text-white border-white/20 hover:bg-white/20" 
-                    : "bg-black/10 text-black border-black/20 hover:bg-black/20"
-                }`}
+            {/* Absolute Buttons ONLY while video is playing: automatically depends on screen size */}
+            {showVideo && (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ 
+                  opacity: 1
+                }}
+                transition={{ 
+                  opacity: { duration: 0.8, delay: 0.3 }
+                }}
+                className="absolute left-0 right-0 flex flex-nowrap gap-2 sm:gap-4 justify-center pointer-events-auto px-4 bottom-[8vh] sm:bottom-[12vh] md:bottom-[15vh] lg:bottom-[18vh]"
               >
-                Partner with Us
-              </button>
-            </motion.div>
+                <button onClick={() => { window.open('https://canzo.in', '_blank'); }} className="inline-flex items-center gap-1.5 sm:gap-2 px-5 py-3 sm:px-8 sm:py-4 rounded-full bg-accent text-accent-foreground font-semibold hover:bg-amber-hover transition-colors shadow-lg text-sm sm:text-base whitespace-nowrap">Order Now <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" /></button>
+                <button 
+                  onClick={() => { window.scrollTo(0,0); navigate('/colleges-canteens'); }} 
+                  className="inline-flex items-center gap-1.5 sm:gap-2 px-5 py-3 sm:px-8 sm:py-4 rounded-full backdrop-blur-md border font-semibold transition-all duration-1000 shadow-lg bg-white/10 text-white border-white/20 hover:bg-white/20 text-sm sm:text-base whitespace-nowrap"
+                >
+                  Partner with Us
+                </button>
+              </motion.div>
+            )}
           </motion.div>
           
           {/* Scroll indicator */}

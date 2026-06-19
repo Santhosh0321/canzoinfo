@@ -1,14 +1,13 @@
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import appScreen from "@/assets/work/web6.jpeg";
 import appScreen2 from "@/assets/work/web5.png";
+import appScreen3 from "@/assets/work/web7.png";
 
 const PLAY_URL = "https://play.google.com/store/apps/details?id=canzo.in";
 const QR_URL = `https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=0&data=${encodeURIComponent(
   PLAY_URL
 )}`;
-const APP_SCREEN_URL = appScreen;
-
-
 
 const PlayStoreBadge = () => (
   <a
@@ -31,65 +30,177 @@ const PlayStoreBadge = () => (
   </a>
 );
 
-type PhoneVariant = "qr" | "screen";
-
-const PhoneMockup = ({
-  variant,
-  className = "",
-  imageSrc,
-}: {
-  variant: PhoneVariant;
-  className?: string;
-  imageSrc?: string;
-}) => (
+/* ── Reusable side phone mockup ───────────────────────────────── */
+const SidePhone = ({ imageSrc }: { imageSrc: string }) => (
   <a
     href={PLAY_URL}
     target="_blank"
     rel="noopener noreferrer"
     aria-label="Download Canzo from Google Play"
-    className={`relative block w-[160px] sm:w-[210px] md:w-[215px] lg:w-[230px] aspect-[9/19] rounded-[2rem] sm:rounded-[2.5rem] bg-gradient-to-b from-neutral-700 via-neutral-900 to-black p-[6px] sm:p-[8px] shadow-2xl transition-transform hover:scale-[1.02] ${className}`}
+    className="relative block aspect-[9/19] rounded-[2.2rem] bg-gradient-to-b from-neutral-700 via-neutral-900 to-black p-[6px] shadow-2xl"
+    style={{ width: 152 }}
   >
-    {/* Inner bezel */}
+    {/* Specular highlight */}
+    <div className="absolute inset-0 rounded-[2.2rem] bg-gradient-to-br from-white/20 via-transparent to-transparent pointer-events-none z-30" />
+    <div className="relative w-full h-full rounded-[1.9rem] bg-white overflow-hidden">
+      <div
+        aria-hidden
+        className="absolute top-2 left-1/2 -translate-x-1/2 h-[15px] w-[58px] rounded-full bg-black z-20 flex items-center justify-end pr-2"
+      >
+        <span className="h-[3px] w-[3px] rounded-full bg-neutral-700 ring-[2px] ring-neutral-900" />
+      </div>
+      <img
+        src={imageSrc}
+        alt="Canzo app preview"
+        className="absolute inset-0 w-full h-full object-cover"
+        loading="lazy"
+      />
+    </div>
+  </a>
+);
+
+/* ── Center (dominant) phone mockup ──────────────────────────── */
+const CenterPhone = ({ imageSrc }: { imageSrc: string }) => (
+  <a
+    href={PLAY_URL}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Download Canzo from Google Play"
+    className="relative block aspect-[9/19] rounded-[2.5rem] bg-gradient-to-b from-neutral-700 via-neutral-900 to-black p-[7px]"
+    style={{ width: 182 }}
+  >
+    <div className="absolute inset-0 rounded-[2.5rem] bg-gradient-to-br from-white/25 via-transparent to-transparent pointer-events-none z-30" />
+    <div className="relative w-full h-full rounded-[2.2rem] bg-white overflow-hidden">
+      <div
+        aria-hidden
+        className="absolute top-2 left-1/2 -translate-x-1/2 h-[18px] w-[70px] rounded-full bg-black z-20 flex items-center justify-end pr-2"
+      >
+        <span className="h-1 w-1 rounded-full bg-neutral-700 ring-[2px] ring-neutral-900" />
+      </div>
+      <img
+        src={imageSrc}
+        alt="Canzo app preview"
+        className="absolute inset-0 w-full h-full object-cover"
+        loading="lazy"
+      />
+    </div>
+  </a>
+);
+
+/* ── QR mockup for desktop ────────────────────────────────────── */
+const QRPhone = () => (
+  <a
+    href={PLAY_URL}
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Download Canzo from Google Play"
+    className="relative block w-[160px] sm:w-[210px] md:w-[215px] lg:w-[230px] aspect-[9/19] rounded-[2rem] sm:rounded-[2.5rem] bg-gradient-to-b from-neutral-700 via-neutral-900 to-black p-[6px] sm:p-[8px] shadow-2xl transition-transform hover:scale-[1.02]"
+  >
     <div className="relative w-full h-full rounded-[1.7rem] sm:rounded-[2.1rem] bg-white overflow-hidden">
-      {/* Dynamic Island */}
       <div
         aria-hidden
         className="absolute top-2 left-1/2 -translate-x-1/2 h-[16px] w-[60px] sm:h-[22px] sm:w-[85px] rounded-full bg-black z-20 flex items-center justify-end pr-2"
       >
         <span className="h-1 w-1 sm:h-1.5 sm:w-1.5 rounded-full bg-neutral-700 ring-[2px] ring-neutral-900" />
       </div>
-
-      {variant === "qr" ? (
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 pt-8 pb-4">
-          <p className="text-center text-[11px] sm:text-[13px] font-semibold text-neutral-800 leading-snug">
-            Scan to Download
-          </p>
-          <div className="mt-3 rounded-xl border-2 border-accent/70 p-2 bg-white">
-            <img
-              src={QR_URL}
-              alt="Scan to download Canzo on Google Play"
-              className="w-[80px] h-[80px] sm:w-[120px] sm:h-[120px] block"
-              loading="lazy"
-            />
-          </div>
+      <div className="absolute inset-0 flex flex-col items-center justify-center px-4 pt-8 pb-4">
+        <p className="text-center text-[11px] sm:text-[13px] font-semibold text-neutral-800 leading-snug">
+          Scan to Download
+        </p>
+        <div className="mt-3 rounded-xl border-2 border-accent/70 p-2 bg-white">
+          <img
+            src={QR_URL}
+            alt="Scan to download Canzo on Google Play"
+            className="w-[80px] h-[80px] sm:w-[120px] sm:h-[120px] block"
+            loading="lazy"
+          />
         </div>
-      ) : (
-        <img
-          src={imageSrc || APP_SCREEN_URL}
-          alt="Canzo app preview"
-          className="absolute inset-0 w-full h-full object-cover"
-          loading="lazy"
-        />
-      )}
+      </div>
     </div>
   </a>
 );
 
+/* ── 3-Phone animated showcase (mobile only) ──────────────────── */
+const MobilePhoneShowcase = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.3 });
+
+  const spring = {
+    type: "spring" as const,
+    stiffness: 52,
+    damping: 17,
+    mass: 1.1,
+  };
+
+  return (
+    <div
+      ref={ref}
+      className="relative flex items-end justify-center w-full overflow-visible"
+      style={{ height: 380 }}
+    >
+      {/* LEFT PHONE — starts behind center, slides left */}
+      <motion.div
+        initial={{ x: 0, y: 0, opacity: 0.45, scale: 0.80, rotate: 0 }}
+        animate={
+          inView
+            ? { x: -100, y: -15, opacity: 1, scale: 0.90, rotate: 0 }
+            : { x: 0, y: 0, opacity: 0.45, scale: 0.80, rotate: 0 }
+        }
+        transition={{ ...spring, delay: 0.06 }}
+        className="absolute bottom-0"
+        style={{
+          zIndex: 1,
+          transformOrigin: "bottom center",
+          filter: "drop-shadow(-10px 18px 36px rgba(0,0,0,0.40))",
+        }}
+      >
+        <SidePhone imageSrc={appScreen3} />
+      </motion.div>
+
+      {/* RIGHT PHONE — starts behind center, slides right */}
+      <motion.div
+        initial={{ x: 0, y: 0, opacity: 0.45, scale: 0.80, rotate: 0 }}
+        animate={
+          inView
+            ? { x: 100, y: -15, opacity: 1, scale: 0.90, rotate: 0 }
+            : { x: 0, y: 0, opacity: 0.45, scale: 0.80, rotate: 0 }
+        }
+        transition={{ ...spring, delay: 0.06 }}
+        className="absolute bottom-0"
+        style={{
+          zIndex: 1,
+          transformOrigin: "bottom center",
+          filter: "drop-shadow(10px 18px 36px rgba(0,0,0,0.40))",
+        }}
+      >
+        <SidePhone imageSrc={appScreen2} />
+      </motion.div>
+
+      {/* CENTER PHONE — always in front, fades/scales in */}
+      <motion.div
+        initial={{ scale: 0.88, opacity: 0 }}
+        animate={inView ? { scale: 1, opacity: 1 } : { scale: 0.88, opacity: 0 }}
+        transition={{ ...spring, delay: 0 }}
+        className="absolute bottom-0"
+        style={{
+          zIndex: 10,
+          transformOrigin: "bottom center",
+          filter:
+            "drop-shadow(0 28px 52px rgba(0,0,0,0.55)) drop-shadow(0 6px 14px rgba(0,0,0,0.28))",
+        }}
+      >
+        <CenterPhone imageSrc={appScreen} />
+      </motion.div>
+    </div>
+  );
+};
+
+/* ── Main Section ─────────────────────────────────────────────── */
 const DownloadAppSection = () => {
   return (
     <section
       id="download-app"
-      className="flex items-center py-section bg-accent/10 md:bg-yellow-500/10"
+      className="flex items-center py-section bg-accent/10"
     >
       <div className="container px-0 md:px-4">
         <motion.div
@@ -97,40 +208,30 @@ const DownloadAppSection = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="relative overflow-hidden md:rounded-3xl md:bg-card md:border border-border md:px-[clamp(1.25rem,4vw,4rem)] md:py-[clamp(2.5rem,5vw,4rem)] w-full"
+          className="relative overflow-visible md:overflow-hidden md:px-[clamp(1.25rem,4vw,4rem)] md:py-[clamp(2.5rem,5vw,4rem)] w-full"
         >
-          {/* Mobile: completely custom layout matching the reference image */}
-          <div className="md:hidden flex flex-col w-full bg-accent/10">
-            {/* Top Pink Gradient with overlapping phones */}
-            <div className="w-full pt-12 pb-4 flex justify-center items-end h-[380px]">
-              <div className="relative w-[280px] h-full">
-                {/* Back Phone (Left, smaller) */}
-                <div className="absolute left-2 bottom-[10px]">
-                  <PhoneMockup variant="screen" imageSrc={appScreen2} className="scale-90 opacity-95 shadow-xl" />
-                </div>
-                {/* Front Phone (Right, larger) */}
-                <div className="absolute right-6 bottom-[-10px] z-10">
-                  <PhoneMockup variant="screen" className="shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)]" />
-                </div>
-              </div>
+          {/* ── MOBILE LAYOUT ── */}
+          <div className="md:hidden flex flex-col w-full">
+            {/* 3-phone showcase */}
+            <div className="w-full pt-14 pb-0 overflow-visible">
+              <MobilePhoneShowcase />
             </div>
 
-            {/* Bottom Content Container */}
-            <div className="pt-12 pb-16 px-4 text-center flex flex-col items-center relative z-20">
+            {/* Text + CTA */}
+            <div className="pt-10 pb-16 px-6 text-center flex flex-col items-center relative z-20">
               <h2 className="text-4xl font-display font-bold text-black tracking-tight mb-4">
                 Download the app now!
               </h2>
               <p className="text-muted-foreground text-[16px] max-w-[280px] leading-[1.4] mb-8">
                 Experience seamless food ordering<br />with the Canzo app
               </p>
-              
               <div className="flex flex-row justify-center gap-3 w-full">
                 <PlayStoreBadge />
               </div>
             </div>
           </div>
 
-          {/* Desktop: original layout */}
+          {/* ── DESKTOP LAYOUT (unchanged) ── */}
           <div className="hidden md:grid grid-cols-2 gap-[var(--space-gap)] items-center">
             <div>
               <h2 className="text-fluid-h1 font-display font-bold text-foreground tracking-tight">
@@ -144,7 +245,7 @@ const DownloadAppSection = () => {
               </div>
             </div>
             <div className="relative flex justify-center items-center py-4">
-              <PhoneMockup variant="qr" />
+              <QRPhone />
             </div>
           </div>
         </motion.div>

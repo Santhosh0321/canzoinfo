@@ -198,9 +198,9 @@ const CollegesCanteensPage = () => {
                 className="p-8 sm:p-12 rounded-2xl bg-accent/10 border border-accent/20 text-center"
               >
                 <CheckCircle2 className="w-14 h-14 text-accent mx-auto mb-4" />
-                <h2 className="text-2xl font-display font-bold mb-2">Request Submitted!</h2>
+                <h2 className="text-2xl font-display font-bold mb-2">Thank you, {formData.name}!</h2>
                 <p className="text-muted-foreground mb-6">
-                  Thank you for your interest! Our team will review your details and reach out to you within 24 hours.
+                  Your partnership request for {formData.institution} has been submitted successfully! We are excited to collaborate with you. Our team will review your details and reach out to you within 24 hours. Have a wonderful day!
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                   <Link to="/">

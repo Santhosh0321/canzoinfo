@@ -166,9 +166,9 @@ const CareersApplyPage = () => {
               className="p-8 sm:p-12 rounded-2xl bg-accent/10 border border-accent/20 text-center"
             >
               <CheckCircle2 className="w-14 h-14 text-accent mx-auto mb-4" />
-              <h2 className="text-2xl font-display font-bold mb-2">Application Received!</h2>
+              <h2 className="text-2xl font-display font-bold mb-2">Thank you, {form.getValues("name")}!</h2>
               <p className="text-muted-foreground mb-6">
-                Thank you for applying to Canzo. Our hiring team will review your application and get in touch with you shortly.
+                Your application for the role of {form.getValues("role")} has been received successfully. We appreciate your interest in joining Canzo! Our hiring team will review your details and get in touch with you shortly. Keep up the great work!
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <Link to="/careers">
