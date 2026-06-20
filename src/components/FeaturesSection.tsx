@@ -16,8 +16,17 @@ const FeaturesSection = () => {
   const isInView = useInView(containerRef, { once: false, margin: "-100px" });
   const [activeIndex, setActiveIndex] = useState(-1);
 
+const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" ? window.innerWidth <= 768 : false);
+
+  // Update mobile state on resize
   useEffect(() => {
-    if (!isInView) {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (!isInView || isMobile) {
       setActiveIndex(-1);
       return;
     }
@@ -28,7 +37,7 @@ const FeaturesSection = () => {
     }, 2200);
 
     return () => clearInterval(interval);
-  }, [isInView]);
+  }, [isInView, isMobile]);
 
   return (
     <section id="features" className="py-section">
@@ -56,7 +65,7 @@ const FeaturesSection = () => {
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
               animate={
-                activeIndex === i
+                activeIndex === i && !isMobile
                   ? { scale: 1.08, y: -12 }
                   : { scale: 1, y: 0 }
               }

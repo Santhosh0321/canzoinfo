@@ -6,7 +6,7 @@ import kg1 from "@/assets/work/kg1.JPG";
 import kg2 from "@/assets/work/kg2.JPG";
 import kg3 from "@/assets/work/kg3.JPG";
 import letter from "@/assets/work/letter.png";
-import letterwp from "@/assets/work/letterwp.jpeg";
+import letternew from "@/assets/work/letternew.png";
 import std1 from "@/assets/work/std1.jpeg";
 import std2 from "@/assets/work/std2.jpeg";
 import threeinkg from "@/assets/work/threeinkg.jpeg";
@@ -20,7 +20,7 @@ export const IMG = {
   kg2,
   kg3,
   letter,
-  letterwp,
+  letternew,
   std1,
   std2,
   threeinkg,
@@ -143,9 +143,9 @@ export const works: Work[] = [
     title: "Institutional Recognition & Support",
     subtitle: "Official Recognition from Hindusthan College of Arts & Science",
     category: "Recognition",
-    thumbnail: IMG.letterwp,
-    hero: IMG.letterwp,
-    gallery: [IMG.letter, IMG.letterwp],
+    thumbnail: IMG.letternew,
+    hero: IMG.letternew,
+    gallery: [IMG.letter],
     stats: [
       { label: "Recognition", value: "Principal" },
       { label: "Document", value: "Official Letter" },
